@@ -21,7 +21,7 @@ class JohnsonsTwoMachineAlgorithm
 {
 public:
 	JohnsonsTwoMachineAlgorithm() = default;
-	enum class MachineNumber { First,Second};
+	enum class MachineNumber {First,Second};
 	void LoadTimesForMachines(MachineNumber whichMachine, timesForJobs times);
 private:
 	Machine _firstMachine;
@@ -58,6 +58,5 @@ int main()
 	JohnsonsTwoMachineAlgorithm exampleAlgorithm;
 	timesForJobs exampleTimes{ {1,3},{2,4},{3,5} }; 
 	exampleAlgorithm.LoadTimesForMachines(JohnsonsTwoMachineAlgorithm::MachineNumber::First, exampleTimes);
-	// MÊCZÊ SIÊ Z VS ¯EBY WGL TO SKOMPILOWAÆ WSZYSTKO XD
 	return 0;
 }
