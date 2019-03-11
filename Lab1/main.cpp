@@ -6,7 +6,7 @@
 #include <map>
 #include <algorithm>
 
-using timesForJobs = std::vector<std::pair<const int, const int>>; /*Nazwa niefortunna, trzeba zmieniæ XD
+using timesForJobs = std::list<std::pair<const int, const int>>; /*Nazwa niefortunna, trzeba zmieniæ XD
 																	Generalnie chodzi o pary:(Numer zadania, Czas wykonania)*/
 class Machine
 {
@@ -14,7 +14,7 @@ public:
 	Machine() = default;
 	void LoadTimes(timesForJobs times);
 	timesForJobs _timesForJobs;
-	
+
 	std::pair<const int, const int> findMinTime();
 };
 
@@ -22,7 +22,7 @@ class JohnsonsTwoMachineAlgorithm
 {
 public:
 	JohnsonsTwoMachineAlgorithm() = default;
-	enum class MachineNumber {First,Second};
+	enum class MachineNumber { First, Second };
 	void LoadTimesForMachines(MachineNumber whichMachine, timesForJobs times);
 	void DO();
 private:
@@ -43,10 +43,13 @@ void JohnsonsTwoMachineAlgorithm::LoadTimesForMachines(JohnsonsTwoMachineAlgorit
 	if (whichMachine == JohnsonsTwoMachineAlgorithm::MachineNumber::First)
 	{
 		_firstMachine.LoadTimes(times);
+		_firstMachine.findMinTime();
 	}
 	else if (whichMachine == JohnsonsTwoMachineAlgorithm::MachineNumber::Second)
 	{
 		_secondMachine.LoadTimes(times);
+		_secondMachine.findMinTime();
+
 	}
 	else
 	{
@@ -55,18 +58,44 @@ void JohnsonsTwoMachineAlgorithm::LoadTimesForMachines(JohnsonsTwoMachineAlgorit
 	}
 }
 
-std::pair<const int, const int> Machine::findMinTime()
+std::pair<const int, const int> Machine::findMinTime() /* Tak bym to rozwi¹za³ ale mo¿esz porawiæ jak jest nieoptymalnie czy coœ */
 {
-	/*TODO*/
+	std::pair<int, int> min = { 0, 999 };
+	std::list<std::pair<const int, const int>>::iterator it;
+	for (it = _timesForJobs.begin(); it != _timesForJobs.end(); ++it)
+	{
+		if (_timesForJobs.front().second < min.second) // to jest Ÿle, jak to porównaæ?
+		{
+			min = *it;
+			//min.second = _timesForJobs.front().second;
+			//min.first = _timesForJobs.front().first;
+		}
+	}
+	std::cout << min.first << std::endl; // test
+	return min;
 }
+
 /*http://kkapd.f11.com.pl/zsw/Algorytm_Johnsona/przyklad_Johnson.htm Przyk³ad który bêdziemy odtwarzaæ*/
 void JohnsonsTwoMachineAlgorithm::DO()
 {
 	std::list<int> jobsToConsiderate{ 1,2,3,4,5 };
-	/*TODO*/
-	//while (jobsToConsiderate.size() != 0)
+	std::list<std::pair<int, int>> jobOptimalOrder1{ NULL };
+	std::list<std::pair<int, int>> jobOptimalOrder2{ NULL };
+
+	while (jobsToConsiderate.size() != 0)
 	{
-		//int lowestFromFirst = std::min_element(_firstMachine._timesForJobs.begin(), _firstMachine._timesForJobs.end(),[]());
+		std::pair<int, int> lowestFromFirst = _firstMachine.findMinTime();
+		std::pair<int, int> lowestFromSecond = _secondMachine.findMinTime();
+		if (lowestFromFirst.second < lowestFromSecond.second)
+		{
+			jobOptimalOrder1.push_back(lowestFromFirst);
+			jobsToConsiderate.remove(lowestFromFirst.first);
+		}
+		else
+		{
+			jobOptimalOrder2.push_front(lowestFromSecond);
+			jobsToConsiderate.remove(lowestFromSecond.second);
+		}
 	}
 }
 
@@ -77,5 +106,6 @@ int main()
 	exampleAlgorithm.LoadTimesForMachines(JohnsonsTwoMachineAlgorithm::MachineNumber::First, exampleTimes);
 	timesForJobs exampleTimes2{ {1,5}, {2,1}, {3,4}, {4,8}, {5,3} };
 	exampleAlgorithm.LoadTimesForMachines(JohnsonsTwoMachineAlgorithm::MachineNumber::Second, exampleTimes2);
+	//exampleAlgorithm.DO();
 	return 0;
 }
