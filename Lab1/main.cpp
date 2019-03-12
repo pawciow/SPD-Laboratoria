@@ -67,7 +67,6 @@ std::pair<const int, const int> Machine::findMinTime()
 			min = *it;
 		}
 	}
-	std::cout << min.first << std::endl; // test
 
 	return min;
 }
@@ -81,16 +80,19 @@ void Machine::deleteTask(std::pair<int, int> taskToDelete)
 		if (std::get<0>(*it) == taskToDelete.first)
 		{
 			it = _timesForJobs.erase(it);
+			break;
 		}
+
 	}
 }
 
 /*http://kkapd.f11.com.pl/zsw/Algorytm_Johnsona/przyklad_Johnson.htm Przyk³ad który bêdziemy odtwarzaæ*/
 void JohnsonsTwoMachineAlgorithm::DO()
 {
-	//std::list<int> jobsToConsiderate{ 1,2,3,4,5 };
-	std::list<std::pair<const int, const int>> jobOptimalOrder1{};
-	std::list<std::pair<const int, const int>> jobOptimalOrder2{};
+	std::list<std::pair<const int, const int>> jobOptimalOrder1;
+	std::list<std::pair<const int, const int>> jobOptimalOrder2;
+
+	std::list<std::pair<const int, const int>>::iterator it;
 
 	std::pair<int, int> lowestFromFirst;
 	std::pair<int, int> lowestFromSecond;
@@ -115,14 +117,28 @@ void JohnsonsTwoMachineAlgorithm::DO()
 			_secondMachine.deleteTask(lowestFromSecond);
 		}
 	}
+
+	while (jobOptimalOrder2.empty() == false)
+	{
+
+		jobOptimalOrder1.push_back(jobOptimalOrder2.front());
+		jobOptimalOrder2.pop_front();
+	}
+
+	std::cout << "Kolejnosc wykonywania podanych zadan wedlog reguly Johnson'a to:";
+	for (it = jobOptimalOrder1.begin(); it != jobOptimalOrder1.end(); ++it)
+	{
+		std::cout << " " << std::get<0>(*it);
+	}
+	std::cout << std::endl;
 }
 
 int main()
 {
 	JohnsonsTwoMachineAlgorithm exampleAlgorithm;
-	timesForJobs exampleTimes{ {1,6},{2,0},{3,5}, {4,8}, {5,2} };
+	timesForJobs exampleTimes{ {1,1},{2,3},{3,5}, {4,7}, {5,9} };
 	exampleAlgorithm.LoadTimesForMachines(JohnsonsTwoMachineAlgorithm::MachineNumber::First, exampleTimes);
-	timesForJobs exampleTimes2{ {1,5}, {2,1}, {3,4}, {4,8}, {5,3} };
+	timesForJobs exampleTimes2{ {1,2}, {2,4}, {3,6}, {4,8}, {5,10} };
 	exampleAlgorithm.LoadTimesForMachines(JohnsonsTwoMachineAlgorithm::MachineNumber::Second, exampleTimes2);
 	exampleAlgorithm.DO();
 	return 0;
