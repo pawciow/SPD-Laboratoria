@@ -26,6 +26,7 @@ public:
 	enum class MachineNumber { First, Second };
 	void LoadTimesForMachines(MachineNumber whichMachine, timesForJobs times);
 	void DO();
+	int countTime(std::list<const int> jobOrder);
 private:
 	Machine _firstMachine;
 	Machine _secondMachine;
@@ -86,9 +87,10 @@ void Machine::deleteTask(std::pair<int, int> taskToDelete)
 	}
 }
 
-/*http://kkapd.f11.com.pl/zsw/Algorytm_Johnsona/przyklad_Johnson.htm Przyk³ad który bêdziemy odtwarzaæ*/
 void JohnsonsTwoMachineAlgorithm::DO()
 {
+	Machine tmpFirstMachine = _firstMachine;
+	Machine tmpSecondMachine = _secondMachine;
 	std::list<std::pair<const int, const int>> jobOptimalOrder1;
 	std::list<std::pair<const int, const int>> jobOptimalOrder2;
 
@@ -97,24 +99,24 @@ void JohnsonsTwoMachineAlgorithm::DO()
 	std::pair<int, int> lowestFromFirst;
 	std::pair<int, int> lowestFromSecond;
 
-	while (_firstMachine._timesForJobs.empty() == false && _secondMachine._timesForJobs.empty() == false)
+	while (tmpFirstMachine._timesForJobs.empty() == false && tmpSecondMachine._timesForJobs.empty() == false)
 	{
-		lowestFromFirst = _firstMachine.findMinTime();
-		lowestFromSecond = _secondMachine.findMinTime();
+		lowestFromFirst = tmpFirstMachine.findMinTime();
+		lowestFromSecond = tmpSecondMachine.findMinTime();
 
 		if (lowestFromFirst.second < lowestFromSecond.second)
 		{
 			jobOptimalOrder1.push_back(lowestFromFirst);
 
-			_firstMachine.deleteTask(lowestFromFirst);
-			_secondMachine.deleteTask(lowestFromFirst);
+			tmpFirstMachine.deleteTask(lowestFromFirst);
+			tmpSecondMachine.deleteTask(lowestFromFirst);
 		}
 		else
 		{
 			jobOptimalOrder2.push_front(lowestFromSecond);
 
-			_firstMachine.deleteTask(lowestFromSecond);
-			_secondMachine.deleteTask(lowestFromSecond);
+			tmpFirstMachine.deleteTask(lowestFromSecond);
+			tmpSecondMachine.deleteTask(lowestFromSecond);
 		}
 	}
 
@@ -126,11 +128,52 @@ void JohnsonsTwoMachineAlgorithm::DO()
 	}
 
 	std::cout << "Kolejnosc wykonywania podanych zadan wedlog reguly Johnson'a to:";
+
 	for (it = jobOptimalOrder1.begin(); it != jobOptimalOrder1.end(); ++it)
 	{
 		std::cout << " " << std::get<0>(*it);
 	}
 	std::cout << std::endl;
+}
+
+int JohnsonsTwoMachineAlgorithm::countTime(std::list<const int> jobOrder)
+{
+	int timeForFirstMachine = 0;
+	int timeForSecondMachine = 0;
+	int sumTimesForFirstMachine = 0;
+	int i = 0;
+
+	/* Zamiana list na wektory */
+	std::vector<std::pair<const int, const int>> firstMachineTimesVector;
+	std::vector<std::pair<const int, const int>> secondMachineTimesVector;
+	std::transform(_firstMachine._timesForJobs.begin(), _firstMachine._timesForJobs.end(), firstMachineTimesVector.begin(), std::back_inserter(firstMachineTimesVector));
+	std::transform(_firstMachine._timesForJobs.begin(), _secondMachine._timesForJobs.end(), secondMachineTimesVector.begin(), std::back_inserter(secondMachineTimesVector));
+
+	std::list<std::pair<const int, const int>>::iterator it;
+	std::list<const int>::iterator itJobOrder;
+
+	for (it = _firstMachine._timesForJobs.begin(); it != _firstMachine._timesForJobs.end(); ++it)
+	{
+		sumTimesForFirstMachine += std::get<1>(*it);
+	}
+
+	it = _firstMachine._timesForJobs.begin();
+
+	for (itJobOrder = jobOrder.begin(); itJobOrder != jobOrder.end(); ++itJobOrder)
+	{
+		timeForFirstMachine = firstMachineTimesVector[i].second;
+
+		if (timeForFirstMachineHaveToWait(timeForFirstMachine, timeForSecondMachine) != 0)  //metoda do zaimplementowania
+		{
+			//timeForSecondMachine += secondMachineTimesVector[*itJobOrder].second;    // do czasu drugiej dodaj czas na taska + czas na czekanie
+		}
+		else
+		{
+			timeForSecondMachine += secondMachineTimesVector[*itJobOrder].second;
+		}
+	}
+
+	return 0;
 }
 
 int main()
