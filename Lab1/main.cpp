@@ -186,24 +186,23 @@ int JohnsonsTwoMachineAlgorithm::countTime(std::list<int> jobOrder)
 
 int JohnsonsTwoMachineAlgorithm::permutations()
 {
-	std::vector<std::pair<const int, const int>> firstMachineTimesVector{ std::begin(_firstMachine._timesForJobs), std::end(_firstMachine._timesForJobs) };
-	std::vector<std::pair<const int, const int>> secondMachineTimesVector{ std::begin(_secondMachine._timesForJobs), std::end(_secondMachine._timesForJobs) };
+	std::vector<std::pair<int, int>> firstMachineTimesVector{ std::begin(_firstMachine._timesForJobs), std::end(_firstMachine._timesForJobs) };
 	std::list<int> jobOrder;
 	int minTime = 9999;
+	int timeTmp;
 
-	//pêtla for i ustawienie wartoœci jobOrder
-	/*
 	do
 	{
-		//wyliczenie pierwszej kombinacji 1 2 3 ...
-		//ustawienie minTime
-	}
-	while (std::next_permutation(firstMachineTimesVector[0], firstMachineTimesVector[firstMachineTimesVector.size()])); <--tu coœ nie tak je ale chuj Kuba zrobisz to jutro <3
-	{
-		//wyliczednie innych Combosow
-		//sprawdzenie czy jest nowy minTime
-	}
-	*/
+		jobOrder.clear();
+		for (int i = 0; i < firstMachineTimesVector.size(); i++)
+		{
+			jobOrder.push_back(firstMachineTimesVector[i].first);
+		}
+		timeTmp = countTime(jobOrder);
+		if (timeTmp < minTime)
+			minTime = timeTmp;
+	} while (std::next_permutation(firstMachineTimesVector.begin(), firstMachineTimesVector.end()));
+
 	return minTime;
 }
 
@@ -211,12 +210,13 @@ int main()
 {
 	int time;
 	JohnsonsTwoMachineAlgorithm exampleAlgorithm;
-	timesForJobs exampleTimes{ {1,1},{2,3},{3,5}, {4,7}, {5,9} };
+	timesForJobs exampleTimes{ {1,3},{2,5},{3,7}, {4,9}, {5,2} };
 	exampleAlgorithm.LoadTimesForMachines(JohnsonsTwoMachineAlgorithm::MachineNumber::First, exampleTimes);
-	timesForJobs exampleTimes2{ {1,2}, {2,4}, {3,6}, {4,8}, {5,10} };
+	timesForJobs exampleTimes2{ {1,4}, {2,11}, {3,1}, {4,12}, {5,10} };
 	exampleAlgorithm.LoadTimesForMachines(JohnsonsTwoMachineAlgorithm::MachineNumber::Second, exampleTimes2);
 	time = exampleAlgorithm.countTime(exampleAlgorithm.DO());
-	std::cout << "Czas wykonania zadan wynosi: " << time << std::endl;
-	//exampleAlgorithm.DO();
+	std::cout << "Czas wykonania zadan wedlog reguly Johnson'a wynosi: " << time << std::endl;
+	time = exampleAlgorithm.permutations();
+	std::cout << "Czas wykonania zadan po sprawdzeniu wszystkich mozliwosci wynosi: " << time << std::endl;
 	return 0;
 }
