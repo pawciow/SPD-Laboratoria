@@ -183,19 +183,19 @@ int JohnsonsTwoMachineAlgorithm::permutations()
 		_firstMachine._timesForJobs.begin(), _firstMachine._timesForJobs.end() };
 	std::list<int> jobOrder;
 	int minTime = 9999;
-	/*int timeTmp;
+	int timeTmp;
 	
 	while (std::next_permutation(firstMachineTimesVector.begin(), firstMachineTimesVector.end()))
 	{
 		jobOrder.clear();
-		for (int i = 0; i < firstMachineTimesVector.size(); i++)
+		for (unsigned int i = 0; i < firstMachineTimesVector.size(); i++)
 		{
 			jobOrder.push_back(firstMachineTimesVector[i].first);
 		}
 		timeTmp = countTime(jobOrder);
 		if (timeTmp < minTime)
 			minTime = timeTmp;
-	}*/
+	}
 
 	return minTime;
 }
@@ -225,7 +225,7 @@ std::list<int> JohnsonsThreeMachineAlgorithm::FindOptimalOrderForThree()
 	std::vector<std::pair<const int, int>> tmpThirdMachineJobs(_thirdMachine._timesForJobs.begin(), _thirdMachine._timesForJobs.end());
 
 	
-	for (int i = 0; i < static_cast<int>(_firstMachine._timesForJobs.size()); i++)
+	for (unsigned int i = 0; i < _firstMachine._timesForJobs.size(); i++)
 	{
 		JohnsonsTwoMachineAlgorithm::_firstMachine._timesForJobs.push_back(
 			std::make_pair(i,(tmpFirstMachineJobs[i].second + tmpSecondMachineJobs[i].second)));
