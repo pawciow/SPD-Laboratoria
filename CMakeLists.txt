@@ -3,4 +3,4 @@ project(SPD)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(SPD main.cpp)
+add_executable(SPD Lab1/main.cpp)

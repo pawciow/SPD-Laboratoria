@@ -43,9 +43,9 @@ public:
 	int countTime(std::list<int> jobOrder) override;
 	std::list<int> FindOptimalOrderForThree(); // Wyj¹tkowo niefortunna nazwa, przyda³oby siê póŸniej zmieniæ xD
 private:
-	Machine _firstMachine;
-	Machine _secondMachine;
-	Machine _thirdMachine;
+	Machine firstMachine;
+	Machine secondMachine;
+	Machine thirdMachine;
 };
 
 void Machine::LoadTimes(timesForJobs times)
@@ -203,13 +203,13 @@ int JohnsonsTwoMachineAlgorithm::permutations()
 void JohnsonsThreeMachineAlgorithm::LoadTimesForMachines(JohnsonsTwoMachineAlgorithm::MachineNumber whichMachine, timesForJobs times)
 {
 	if (whichMachine == JohnsonsTwoMachineAlgorithm::MachineNumber::First)
-		_firstMachine.LoadTimes(times);
+		firstMachine.LoadTimes(times);
 
 	else if (whichMachine == JohnsonsTwoMachineAlgorithm::MachineNumber::Second)
-		_secondMachine.LoadTimes(times);
+		secondMachine.LoadTimes(times);
 
 	else if (whichMachine == JohnsonsTwoMachineAlgorithm::MachineNumber::Third)
-		_thirdMachine.LoadTimes(times);
+		thirdMachine.LoadTimes(times);
 
 	else
 	{
@@ -220,16 +220,16 @@ void JohnsonsThreeMachineAlgorithm::LoadTimesForMachines(JohnsonsTwoMachineAlgor
 
 std::list<int> JohnsonsThreeMachineAlgorithm::FindOptimalOrderForThree()
 {
-	std::vector<std::pair<const int, int>> tmpFirstMachineJobs(_firstMachine._timesForJobs.begin(), _firstMachine._timesForJobs.end());
-	std::vector<std::pair<const int, int>> tmpSecondMachineJobs(_secondMachine._timesForJobs.begin(), _secondMachine._timesForJobs.end());
-	std::vector<std::pair<const int, int>> tmpThirdMachineJobs(_thirdMachine._timesForJobs.begin(), _thirdMachine._timesForJobs.end());
+	std::vector<std::pair<const int, int>> tmpFirstMachineJobs(firstMachine._timesForJobs.begin(), firstMachine._timesForJobs.end());
+	std::vector<std::pair<const int, int>> tmpSecondMachineJobs(secondMachine._timesForJobs.begin(), secondMachine._timesForJobs.end());
+	std::vector<std::pair<const int, int>> tmpThirdMachineJobs(thirdMachine._timesForJobs.begin(), thirdMachine._timesForJobs.end());
 
 	
-	for (unsigned int i = 0; i < _firstMachine._timesForJobs.size(); i++)
+	for (unsigned int i = 0; i <5 ; i++)
 	{
-		JohnsonsTwoMachineAlgorithm::_firstMachine._timesForJobs.push_back(
+		_firstMachine._timesForJobs.push_back(
 			std::make_pair(i,(tmpFirstMachineJobs[i].second + tmpSecondMachineJobs[i].second)));
-		JohnsonsTwoMachineAlgorithm::_secondMachine._timesForJobs.push_back(
+		_secondMachine._timesForJobs.push_back(
 			std::make_pair(i, (tmpThirdMachineJobs[i].second + tmpSecondMachineJobs[i].second)));
 	} 
 	
@@ -238,9 +238,9 @@ std::list<int> JohnsonsThreeMachineAlgorithm::FindOptimalOrderForThree()
 
 int JohnsonsThreeMachineAlgorithm::countTime(std::list<int> jobOrder)
 {
-	std::vector<std::pair<const int, int>> tmpFirstMachineJobs(_firstMachine._timesForJobs.begin(), _firstMachine._timesForJobs.end());
-	std::vector<std::pair<const int, int>> tmpSecondMachineJobs(_secondMachine._timesForJobs.begin(), _secondMachine._timesForJobs.end());
-	std::vector<std::pair<const int, int>> tmpThirdMachineJobs(_thirdMachine._timesForJobs.begin(), _thirdMachine._timesForJobs.end());
+	std::vector<std::pair<const int, int>> tmpFirstMachineJobs(firstMachine._timesForJobs.begin(), firstMachine._timesForJobs.end());
+	std::vector<std::pair<const int, int>> tmpSecondMachineJobs(secondMachine._timesForJobs.begin(), secondMachine._timesForJobs.end());
+	std::vector<std::pair<const int, int>> tmpThirdMachineJobs(thirdMachine._timesForJobs.begin(), thirdMachine._timesForJobs.end());
 
 	int timeForFirstMachine = 0, timeForSecondMachine = 0, timeForThirdMachine = 0;
 
@@ -273,5 +273,18 @@ int main()
 	std::cout << "Czas wykonania zadan wedlog reguly Johnson'a wynosi: " << time << std::endl;
 	time = exampleAlgorithm.permutations();
 	std::cout << "Czas wykonania zadan po sprawdzeniu wszystkich mozliwosci wynosi: " << time << std::endl;
+
+
+	timesForJobs exampleForThree1 {{1,3},{2,8},{3,7},{4,5},{5,2}};//{{1,4},{2,9}, {3,8}, {4,6}, {5,3} };
+	timesForJobs exampleForThree2 {{1,3},{2,4},{3,2},{4,1},{5,5}};//{{1,4},{2,5},{3,3},{4,2},{5,6}};
+	timesForJobs exampleForThree3{{1,5},{2,8},{3,10},{4,7},{5,6}};//{{1,6},{2,9},{3,11},{4,8},{5,7}};
+
+	JohnsonsThreeMachineAlgorithm ex;
+	ex.LoadTimesForMachines(JohnsonsThreeMachineAlgorithm::MachineNumber::First, exampleForThree1);
+	ex.LoadTimesForMachines(JohnsonsThreeMachineAlgorithm::MachineNumber::Second, exampleForThree2);
+	ex.LoadTimesForMachines(JohnsonsThreeMachineAlgorithm::MachineNumber::Third, exampleForThree3);
+
+	std::cout << "\n " << ex.countTime(ex.FindOptimalOrderForThree());
+
 	return 0;
 }
