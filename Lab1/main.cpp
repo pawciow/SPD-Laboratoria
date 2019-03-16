@@ -8,7 +8,7 @@
 #include <iterator>
 
 
-using timesForJobs = std::list<std::pair<const int, const int>>; 
+using timesForJobs = std::list<std::pair<const int, const int>>;
 class Machine
 {
 public:
@@ -42,7 +42,7 @@ public:
 	void LoadTimesForMachines(JohnsonsTwoMachineAlgorithm::MachineNumber whichMachine, timesForJobs times) override;
 	int countTime(std::list<int> jobOrder) override;
 	std::list<int> FindOptimalOrderForThree(); // Wyj¹tkowo niefortunna nazwa, przyda³oby siê póŸniej zmieniæ xD
-private:
+    int timeForSecondMachineHaveToWait(int timeForFirstMachine, int timeForSecondMachine);
 	Machine firstMachine;
 	Machine secondMachine;
 	Machine thirdMachine;
@@ -106,7 +106,7 @@ std::list<int> JohnsonsTwoMachineAlgorithm::FindOptimalOrder()
 	std::list<std::pair<const int, const int>> jobOptimalOrder2;
 
 	std::list<int> finalJobOrder;
-	
+
 	while (!tmpFirstMachine._timesForJobs.empty() && !tmpSecondMachine._timesForJobs.empty())
 	{
 		auto lowestFromFirst = tmpFirstMachine.findMinTime();
@@ -128,18 +128,18 @@ std::list<int> JohnsonsTwoMachineAlgorithm::FindOptimalOrder()
 		}
 	}
 
-	while (jobOptimalOrder1.empty() == false)
+	while (jobOptimalOrder1.empty())
 	{
 		finalJobOrder.push_back(jobOptimalOrder1.front().first);
 		jobOptimalOrder1.pop_front();
 	}
-	while (jobOptimalOrder2.empty() == false)
+	while (jobOptimalOrder2.empty() )
 	{
 		finalJobOrder.push_back(jobOptimalOrder2.front().first);
 		jobOptimalOrder2.pop_front();
 	}
 
-	std::cout << "Kolejnosc wykonywania podanych zadan wedlog reguly Johnson'a to:";
+	std::cout << "Kolejnosc wykonywania podanych zadan wedlug reguly Johnson'a to:";
 
 	for (auto && it : finalJobOrder)
 		std::cout << " " << it;
@@ -184,7 +184,7 @@ int JohnsonsTwoMachineAlgorithm::permutations()
 	std::list<int> jobOrder;
 	int minTime = 9999;
 	int timeTmp;
-	
+
 	while (std::next_permutation(firstMachineTimesVector.begin(), firstMachineTimesVector.end()))
 	{
 		jobOrder.clear();
@@ -200,6 +200,12 @@ int JohnsonsTwoMachineAlgorithm::permutations()
 	return minTime;
 }
 
+int JohnsonsThreeMachineAlgorithm::timeForSecondMachineHaveToWait(int timeForFirstMachine, int timeForSecondMachine)
+{
+    int gap = timeForFirstMachine - timeForSecondMachine;
+    if (gap > 0) return gap;
+    else return 0;
+}
 void JohnsonsThreeMachineAlgorithm::LoadTimesForMachines(JohnsonsTwoMachineAlgorithm::MachineNumber whichMachine, timesForJobs times)
 {
 	if (whichMachine == JohnsonsTwoMachineAlgorithm::MachineNumber::First)
@@ -224,15 +230,15 @@ std::list<int> JohnsonsThreeMachineAlgorithm::FindOptimalOrderForThree()
 	std::vector<std::pair<const int, int>> tmpSecondMachineJobs(secondMachine._timesForJobs.begin(), secondMachine._timesForJobs.end());
 	std::vector<std::pair<const int, int>> tmpThirdMachineJobs(thirdMachine._timesForJobs.begin(), thirdMachine._timesForJobs.end());
 
-	
+
 	for (unsigned int i = 0; i <5 ; i++)
 	{
 		_firstMachine._timesForJobs.push_back(
-			std::make_pair(i,(tmpFirstMachineJobs[i].second + tmpSecondMachineJobs[i].second)));
+			std::make_pair(i+1,(tmpFirstMachineJobs[i].second + tmpSecondMachineJobs[i].second)));
 		_secondMachine._timesForJobs.push_back(
-			std::make_pair(i, (tmpThirdMachineJobs[i].second + tmpSecondMachineJobs[i].second)));
-	} 
-	
+			std::make_pair(i+1, (tmpThirdMachineJobs[i].second + tmpSecondMachineJobs[i].second)));
+	}
+
 	return FindOptimalOrder();
 }
 
@@ -244,18 +250,19 @@ int JohnsonsThreeMachineAlgorithm::countTime(std::list<int> jobOrder)
 
 	int timeForFirstMachine = 0, timeForSecondMachine = 0, timeForThirdMachine = 0;
 
-	for (auto & e : jobOrder)
+	for (auto & e: jobOrder)
 	{
-		timeForFirstMachine =+ tmpFirstMachineJobs[e].second;
+//	    std::cout << "Robie : " << e << std::endl;
+		timeForFirstMachine =+ tmpFirstMachineJobs[e - 1].second;
 		if (nextMachineHaveToWait(timeForFirstMachine, timeForSecondMachine))
 			timeForSecondMachine = timeForFirstMachine + tmpSecondMachineJobs[e].second;
 		else
-			timeForSecondMachine += tmpSecondMachineJobs[e].second;
+			timeForSecondMachine += tmpSecondMachineJobs[e - 1].second;
 
 		if (nextMachineHaveToWait(timeForSecondMachine, timeForThirdMachine))
 			timeForThirdMachine = timeForSecondMachine + tmpSecondMachineJobs[e].second;
 		else
-			timeForThirdMachine += tmpThirdMachineJobs[e].second;
+			timeForThirdMachine += tmpThirdMachineJobs[e - 1].second;
 	}
 
 	return std::max(std::max(timeForFirstMachine, timeForSecondMachine), timeForThirdMachine);
@@ -270,7 +277,7 @@ int main()
 	timesForJobs exampleTimes2{ {1,4}, {2,11}, {3,1}, {4,12}, {5,10} };
 	exampleAlgorithm.LoadTimesForMachines(JohnsonsTwoMachineAlgorithm::MachineNumber::Second, exampleTimes2);
 	time = exampleAlgorithm.countTime(exampleAlgorithm.FindOptimalOrder());
-	std::cout << "Czas wykonania zadan wedlog reguly Johnson'a wynosi: " << time << std::endl;
+	std::cout << "Czas wykonania zadan wedlug reguly Johnson'a wynosi: " << time << std::endl;
 	time = exampleAlgorithm.permutations();
 	std::cout << "Czas wykonania zadan po sprawdzeniu wszystkich mozliwosci wynosi: " << time << std::endl;
 
@@ -280,11 +287,14 @@ int main()
 	timesForJobs exampleForThree3{{1,5},{2,8},{3,10},{4,7},{5,6}};//{{1,6},{2,9},{3,11},{4,8},{5,7}};
 
 	JohnsonsThreeMachineAlgorithm ex;
-	ex.LoadTimesForMachines(JohnsonsThreeMachineAlgorithm::MachineNumber::First, exampleForThree1);
+
+
+    ex.LoadTimesForMachines(JohnsonsThreeMachineAlgorithm::MachineNumber::First, exampleForThree1);
 	ex.LoadTimesForMachines(JohnsonsThreeMachineAlgorithm::MachineNumber::Second, exampleForThree2);
 	ex.LoadTimesForMachines(JohnsonsThreeMachineAlgorithm::MachineNumber::Third, exampleForThree3);
+//    std::cout << "\n Wyliczono z premutacjil " << ex.permutations();  // NIE DZIA£¥ :(
 
-	std::cout << "\n " << ex.countTime(ex.FindOptimalOrderForThree());
 
+	std::cout << "Czas dla trzech maszyn:  " << ex.countTime(ex.FindOptimalOrderForThree());
 	return 0;
 }
