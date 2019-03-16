@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "JohnsonsAlgorithm.h"
 #include "NEH.h"
 
