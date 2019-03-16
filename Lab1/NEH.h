@@ -3,7 +3,15 @@
 class NEH
 {
 public:
-	NEH();
-	virtual ~NEH();
+	NEH() = default;
+	virtual ~NEH() = default;
+	void DO();
+private:
+	void StepOne();
+	void StepTwo();
+	void StepThree();
+	void StepFour();
+	std::vector<Machine> _machines;
+	std::vector<std::pair<const int, int>> _sumForTask;
 };
 

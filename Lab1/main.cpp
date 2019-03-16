@@ -22,6 +22,5 @@ int main()
 	time = exampleAlgorithm.permutations(true);
 	std::cout << "Czas wykonania zadan po sprawdzeniu wszystkich mozliwosci dla 3 maszyn wynosi: " << time << std::endl;
 
-
 	return 0;
 }
