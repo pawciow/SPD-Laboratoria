@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include "JohnsonsAlgorithm.h"
 #include "NEH.h"
 
@@ -22,6 +21,7 @@ int main()
 	std::cout << "Czas wykonania zadan wedlog reguly Johnson'a wynosi dla 3 maszyn: " << time << std::endl;
 	time = exampleAlgorithm.permutations(true);
 	std::cout << "Czas wykonania zadan po sprawdzeniu wszystkich mozliwosci dla 3 maszyn wynosi: " << time << std::endl;
+
 
 	return 0;
 }
