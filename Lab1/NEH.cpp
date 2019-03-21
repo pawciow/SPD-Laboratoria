@@ -9,6 +9,7 @@ void NEH::DO()
 	printSumForTask();
 	StepTwo();
 	printSumForTask();
+	for(int i = 0; i< 5; i++)
 	StepFour();
 }
 
@@ -42,9 +43,9 @@ void NEH::StepTwo()
 	});
 }
 
-std::pair<int, int> NEH::StepThree()
+const std::pair<int, int> & NEH::StepThree()
 {
-	return (*std::min_element(std::begin(_sumForTask), std::end(_sumForTask),
+	return(*std::max_element(std::begin(_sumForTask), std::end(_sumForTask),
 		[](const std::pair<int, int> & first, const std::pair<int, int> & second)
 		{
 		return(first.second > second.second);
@@ -53,5 +54,18 @@ std::pair<int, int> NEH::StepThree()
 
 void NEH::StepFour()
 {
-
+	auto & taskToAdd = StepThree();
+	std::vector<std::vector<std::pair<int, int>>> permutations;
+	for (unsigned int i = 0; i < optimalTaskList.size(); i++)
+	{
+		std::vector<std::pair<int, int>> tmp = optimalTaskList;
+		//std::copy(optimalTaskList.begin(),optimalTaskList.end(),tmp);
+		tmp.insert(tmp.begin() + i, taskToAdd);
+		for (const auto & e : tmp)
+		{
+			std::cout << "(" << e.first << "," << e.second << ")";
+		}
+		std::cout << std::endl;
+	}
+	optimalTaskList.push_back(taskToAdd);
 }
