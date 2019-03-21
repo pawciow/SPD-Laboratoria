@@ -3,7 +3,7 @@
 
 int main()
 {
-	int time;
+	/*int time;
 	Algorithm exampleAlgorithm;
 	timesForJobs exampleTimes{ {1,1},{2,2},{3,3}, {4,4}, {5,5} };
 	exampleAlgorithm.LoadTimesForMachines(Algorithm::MachineNumber::First, exampleTimes);
@@ -20,7 +20,20 @@ int main()
 	time = exampleAlgorithm.countTime(exampleAlgorithm.JohnsonsThreeMachineAlgorithm(), true);
 	std::cout << "Czas wykonania zadan wedlog reguly Johnson'a wynosi dla 3 maszyn: " << time << std::endl;
 	time = exampleAlgorithm.permutations(true);
-	std::cout << "Czas wykonania zadan po sprawdzeniu wszystkich mozliwosci dla 3 maszyn wynosi: " << time << std::endl;
+	std::cout << "Czas wykonania zadan po sprawdzeniu wszystkich mozliwosci dla 3 maszyn wynosi: " << time << std::endl;*/
+
+	NEH algorithm;
+
+	Machine first, second, third;
+	first.LoadTimes({ { 1,4 }, { 2,4 }, { 3,1 }, { 4,5 } });
+	second.LoadTimes({ {1,1},{2,3}, {3,2}, {4,1} });
+	third.LoadTimes({ {1,4},{2,3},{3,3},{4,3} });
+
+	algorithm.LoadData(first);
+	algorithm.LoadData(second);
+	algorithm.LoadData(third);
+
+	algorithm.DO();
 
 	return 0;
 }
