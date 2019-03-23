@@ -13,12 +13,53 @@ void NEH::DO()
 	StepFour();
 }
 
+bool NEH::LoadFromFile(std::string fileName)
+{
+	std::ifstream file;
+	file.open(fileName.c_str());
+	if (!file.good())
+		return false;
+
+	Machine machineTmp;
+
+	int taskAmount;
+	int machinesAmount;
+	int timeTmp;
+
+	file >> taskAmount >> machinesAmount;
+	if (!file.fail())
+	{
+		for (int i = 0; i < machinesAmount; i++)
+		{
+			_machines.push_back(machineTmp);
+		}
+
+		for (int j = 0; j < taskAmount; j++)
+		{
+			for (int i = 0; i < machinesAmount; i++)
+			{
+				file >> timeTmp;
+				if (!file.fail())
+				{
+					_machines[i]._timesForJobs.push_back(std::make_pair(j, timeTmp));
+				}
+				else
+					return false;
+			}
+		}
+		return true;
+	}
+	else
+		return false;
+}
+
 void NEH::printSumForTask()
 {
 	for (const auto & e : _sumForTask)
 		std::cout << "("<< e.first << "," << e.second << "),";
 	std::cout << std::endl;
 }
+
 void NEH::StepOne()
 {
 	std::vector<std::pair<int, int>> sumForTasks(_machines[0]._timesForJobs.size()); /* Pary w postaci : nr zadania, suma dla tego zadanka*/
