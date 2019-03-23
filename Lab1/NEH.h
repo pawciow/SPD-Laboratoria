@@ -10,6 +10,7 @@ public:
 	{
 		_machines.push_back(machine);
 	}
+	bool LoadFromFile(std::string fileName);
 private:
 	void StepOne();
 	void StepTwo();
@@ -24,4 +25,3 @@ private:
 		std::cout << "TMP DEBUG";
 	};
 };
-
