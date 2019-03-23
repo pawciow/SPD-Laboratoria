@@ -47,11 +47,48 @@ bool NEH::LoadFromFile(std::string fileName)
 					return false;
 			}
 		}
+		std::cout << "wczytywanie sie powiodlo" << std::endl;
 		return true;
 	}
 	else
 		return false;
 }
+
+int NEH::countTime(std::list<int> jobOrder)
+{
+	int timeGap = 0;
+	int i = 0;
+	std::vector<int> timesForMachines;
+
+	std::list<int>::iterator itJobOrder;
+
+	for (itJobOrder = jobOrder.begin(); itJobOrder != jobOrder.end(); ++itJobOrder)
+	{
+		for ( int i = 0; i < _machines.size() - 1; i++ )
+		{
+			std::vector<std::pair<const int, const int>> MachineTimesVector1
+				{ std::begin(_machines[i]._timesForJobs), std::end(_machines[i]._timesForJobs) };
+			std::vector<std::pair<const int, const int>> MachineTimesVector2
+				{ std::begin(_machines[i+1]._timesForJobs), std::end(_machines[i+1]._timesForJobs) };
+
+			timesForMachines[i] += MachineTimesVector1[*itJobOrder - 1].second;
+			timeGap = timeForSecondMachineHaveToWait(timesForMachines, i);
+
+			if (timeGap != 0)
+				timesForMachines[i] += MachineTimesVector2[*itJobOrder - 1].second + timeGap;
+			else
+				timesForMachines[i] += MachineTimesVector2[*itJobOrder - 1].second;
+		}
+	}
+	return timesForMachines.back();
+}
+
+int NEH::timeForSecondMachineHaveToWait(std::vector<int> timesForMachines, int number)
+{
+	int gap = timesForMachines[number - 1] - timesForMachines[number];
+	if (gap > 0) return gap;
+	else return 0;
+};
 
 void NEH::printSumForTask()
 {
