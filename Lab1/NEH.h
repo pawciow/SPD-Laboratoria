@@ -11,6 +11,8 @@ public:
 		_machines.push_back(machine);
 	}
 	bool LoadFromFile(std::string fileName);
+	int countTime(std::list<int> jobOrder);
+	int timeForSecondMachineHaveToWait(std::vector<int> timesForMachines, int number);
 private:
 	void StepOne();
 	void StepTwo();
