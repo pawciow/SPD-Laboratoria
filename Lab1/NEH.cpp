@@ -9,7 +9,6 @@ void NEH::DO()
 	printSumForTask();
 	StepTwo();
 	printSumForTask();
-	for(int i = 0; i< 5; i++)
 	StepFour();
 }
 
@@ -54,30 +53,35 @@ bool NEH::LoadFromFile(std::string fileName)
 		return false;
 }
 
-int NEH::countTime(std::list<int> jobOrder)
+int NEH::countTime(std::vector<std::pair<int, int>> jobOrder)
 {
 	int timeGap = 0;
 	int i = 0;
 	std::vector<int> timesForMachines;
+	std::vector<std::pair<int, int>>::iterator itJobOrder;
 
-	std::list<int>::iterator itJobOrder;
+	for (int i = 0; i < _machines.size(); i++)
+		timesForMachines.push_back(0);
 
 	for (itJobOrder = jobOrder.begin(); itJobOrder != jobOrder.end(); ++itJobOrder)
 	{
-		for ( int i = 0; i < _machines.size() - 1; i++ )
-		{
-			std::vector<std::pair<const int, const int>> MachineTimesVector1
-				{ std::begin(_machines[i]._timesForJobs), std::end(_machines[i]._timesForJobs) };
-			std::vector<std::pair<const int, const int>> MachineTimesVector2
-				{ std::begin(_machines[i+1]._timesForJobs), std::end(_machines[i+1]._timesForJobs) };
+		std::vector<std::pair<const int, const int>> MachineTimesVector0
+		{ std::begin(_machines[0]._timesForJobs), std::end(_machines[0]._timesForJobs) };
 
-			timesForMachines[i] += MachineTimesVector1[*itJobOrder - 1].second;
+		timesForMachines[0] += MachineTimesVector0[std::get<0>(*itJobOrder)].second;
+
+		for ( int i = 1; i < _machines.size(); i++ )
+		{
+			std::vector<std::pair<const int, const int>> MachineTimesVector2
+				{ std::begin(_machines[i]._timesForJobs), std::end(_machines[i]._timesForJobs) };
+
+			
 			timeGap = timeForSecondMachineHaveToWait(timesForMachines, i);
 
 			if (timeGap != 0)
-				timesForMachines[i] += MachineTimesVector2[*itJobOrder - 1].second + timeGap;
+				timesForMachines[i] += MachineTimesVector2[std::get<0>(*itJobOrder)].second + timeGap;
 			else
-				timesForMachines[i] += MachineTimesVector2[*itJobOrder - 1].second;
+				timesForMachines[i] += MachineTimesVector2[std::get<0>(*itJobOrder)].second;
 		}
 	}
 	return timesForMachines.back();
@@ -117,33 +121,52 @@ void NEH::StepTwo()
 {
 	std::sort(_sumForTask.begin(), _sumForTask.end(),
 		[](const std::pair<int, int> & first, const std::pair<int, int> & second)->bool {
-		return(first.second > second.second);
+		return(first.second < second.second);
 	});
 }
 
-const std::pair<int, int> & NEH::StepThree()
+const std::pair<int, int> & NEH::StepThree(std::vector<std::pair<int, int>> & sumForTaskTmp)
 {
-	return(*std::max_element(std::begin(_sumForTask), std::end(_sumForTask),
+	return(*std::max_element(std::begin(sumForTaskTmp), std::end(sumForTaskTmp),
 		[](const std::pair<int, int> & first, const std::pair<int, int> & second)
 		{
-		return(first.second > second.second);
-	}));
+			return(first.second < second.second);
+		}));
 }
 
 void NEH::StepFour()
 {
-	auto & taskToAdd = StepThree();
-	std::vector<std::vector<std::pair<int, int>>> permutations;
-	for (unsigned int i = 0; i < optimalTaskList.size(); i++)
+	int bestTime = 99999;
+	int timeTmp;
+	int bestPlace = 0;
+
+	
+	std::vector<std::pair<int, int>> sumForTaskTmp = _sumForTask;
+	while (sumForTaskTmp.empty() != true)
 	{
-		std::vector<std::pair<int, int>> tmp = optimalTaskList;
-		//std::copy(optimalTaskList.begin(),optimalTaskList.end(),tmp);
-		tmp.insert(tmp.begin() + i, taskToAdd);
-		for (const auto & e : tmp)
+		auto & taskToAdd = StepThree(sumForTaskTmp);
+		sumForTaskTmp.pop_back();
+		std::vector<std::vector<std::pair<int, int>>> permutations;
+		for (unsigned int i = 0; i < optimalTaskList.size()+1; i++)
 		{
-			std::cout << "(" << e.first << "," << e.second << ")";
+			std::vector<std::pair<int, int>> tmp = optimalTaskList;
+			//std::copy(optimalTaskList.begin(),optimalTaskList.end(),tmp);
+			tmp.insert(tmp.begin() + i, taskToAdd);
+
+			timeTmp = countTime(tmp);
+			if (bestTime > timeTmp)
+			{
+				bestTime = timeTmp;
+				bestPlace = i;
+			}
+
+			for (const auto & e : tmp)
+			{
+				std::cout << "(" << e.first << "," << e.second << ")";
+			}
+			std::cout << std::endl;
 		}
-		std::cout << std::endl;
+		optimalTaskList.insert(optimalTaskList.begin() + bestPlace, taskToAdd);
+		
 	}
-	optimalTaskList.push_back(taskToAdd);
 }
