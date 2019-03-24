@@ -11,12 +11,12 @@ public:
 		_machines.push_back(machine);
 	}
 	bool LoadFromFile(std::string fileName);
-	int countTime(std::list<int> jobOrder);
+	int countTime(std::vector<std::pair<int, int>> jobOrder);
 	int timeForSecondMachineHaveToWait(std::vector<int> timesForMachines, int number);
 private:
 	void StepOne();
 	void StepTwo();
-	const std::pair<int, int> & StepThree();
+	const std::pair<int, int> & StepThree(std::vector<std::pair<int, int>> & sumForTaskTmp);
 	void StepFour();
 	std::vector<Machine> _machines;
 	std::vector<std::pair<int, int>> _sumForTask; /* Pary w postaci : nr zadania, suma dla tego zadanka*/
