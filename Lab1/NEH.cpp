@@ -1,7 +1,6 @@
 #include "NEH.h"
 
 
-
 void NEH::DO()
 {
 	std::cout << "Starting the NEH algorithm. Step one:" << std::endl;
@@ -65,10 +64,10 @@ int NEH::countTime(std::vector<std::pair<int, int>> jobOrder)
 
 	for (itJobOrder = jobOrder.begin(); itJobOrder != jobOrder.end(); ++itJobOrder)
 	{
-		std::vector<std::pair<const int, const int>> MachineTimesVector0
+		std::vector<std::pair<int, int>> MachineTimesVector0
 		{ std::begin(_machines[0]._timesForJobs), std::end(_machines[0]._timesForJobs) };
 
-		timesForMachines[0] += MachineTimesVector0[std::get<0>(*itJobOrder)].second;
+		timesForMachines[0] += MachineTimesVector0[(*itJobOrder).first-1].second;
 
 		for ( int i = 1; i < _machines.size(); i++ )
 		{
@@ -79,11 +78,12 @@ int NEH::countTime(std::vector<std::pair<int, int>> jobOrder)
 			timeGap = timeForSecondMachineHaveToWait(timesForMachines, i);
 
 			if (timeGap != 0)
-				timesForMachines[i] += MachineTimesVector2[std::get<0>(*itJobOrder)].second + timeGap;
+				timesForMachines[i] += MachineTimesVector2[std::get<0>(*itJobOrder)-1].second + timeGap;
 			else
-				timesForMachines[i] += MachineTimesVector2[std::get<0>(*itJobOrder)].second;
+				timesForMachines[i] += MachineTimesVector2[std::get<0>(*itJobOrder)-1].second;
 		}
 	}
+	std::cout << timesForMachines.back() << std::endl;
 	return timesForMachines.back();
 }
 
@@ -127,11 +127,14 @@ void NEH::StepTwo()
 
 const std::pair<int, int> & NEH::StepThree(std::vector<std::pair<int, int>> & sumForTaskTmp)
 {
+	
 	return(*std::max_element(std::begin(sumForTaskTmp), std::end(sumForTaskTmp),
 		[](const std::pair<int, int> & first, const std::pair<int, int> & second)
 		{
 			return(first.second < second.second);
 		}));
+		
+
 }
 
 void NEH::StepFour()
@@ -139,13 +142,14 @@ void NEH::StepFour()
 	int bestTime = 99999;
 	int timeTmp;
 	int bestPlace = 0;
-
 	
 	std::vector<std::pair<int, int>> sumForTaskTmp = _sumForTask;
 	while (sumForTaskTmp.empty() != true)
 	{
-		auto & taskToAdd = StepThree(sumForTaskTmp);
-		sumForTaskTmp.pop_back();
+		//auto & taskToAdd = StepThree(sumForTaskTmp);
+		std::pair<int, int> taskToAdd = sumForTaskTmp.back();
+		
+
 		std::vector<std::vector<std::pair<int, int>>> permutations;
 		for (unsigned int i = 0; i < optimalTaskList.size()+1; i++)
 		{
@@ -167,6 +171,7 @@ void NEH::StepFour()
 			std::cout << std::endl;
 		}
 		optimalTaskList.insert(optimalTaskList.begin() + bestPlace, taskToAdd);
-		
+		sumForTaskTmp.pop_back();
 	}
+		
 }
