@@ -23,9 +23,9 @@ int main()
 	NEH algorithm;
 	NEH alg;
 	Machine first, second, third;
-	first.LoadTimes({ { 1,4 }, { 2,4 }, { 3,1 }, { 4,5 } });
-	second.LoadTimes({ {1,1},{2,3}, {3,2}, {4,1} });
-	third.LoadTimes({ {1,4},{2,3},{3,3},{4,3} });
+	first.LoadTimes({ { 1,12 }, { 2,9 }, { 3,6 }, { 4,3 } });
+	second.LoadTimes({ {1,11},{2,8}, {3,5}, {4,2} });
+	third.LoadTimes({ {1,10},{2,7},{3,4},{4,1} });
 
 	algorithm.LoadData(first);
 	algorithm.LoadData(second);
