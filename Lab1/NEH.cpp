@@ -139,25 +139,25 @@ const std::pair<int, int> & NEH::StepThree(std::vector<std::pair<int, int>> & su
 
 void NEH::StepFour()
 {
-	int bestTime = 99999;
-	int timeTmp;
-	int bestPlace = 0;
 	
 	std::vector<std::pair<int, int>> sumForTaskTmp = _sumForTask;
 	while (sumForTaskTmp.empty() != true)
 	{
 		//auto & taskToAdd = StepThree(sumForTaskTmp);
 		std::pair<int, int> taskToAdd = sumForTaskTmp.back();
-		
+		int bestTime = 99999;
+		int bestPlace = 0;
+
 
 		std::vector<std::vector<std::pair<int, int>>> permutations;
 		for (unsigned int i = 0; i < optimalTaskList.size()+1; i++)
 		{
+
 			std::vector<std::pair<int, int>> tmp = optimalTaskList;
 			//std::copy(optimalTaskList.begin(),optimalTaskList.end(),tmp);
 			tmp.insert(tmp.begin() + i, taskToAdd);
 
-			timeTmp = countTime(tmp);
+			int timeTmp = countTime(tmp);
 			if (bestTime > timeTmp)
 			{
 				bestTime = timeTmp;
@@ -177,7 +177,7 @@ void NEH::StepFour()
 		for (const auto & e : optimalTaskList) {
 			std::cout << e.first << " ";
 		}
-		std::cout << std::endl;
+		std::cout << " z czasem: " << bestTime << std::endl;
 	}
 		
 }
