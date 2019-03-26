@@ -39,7 +39,7 @@ bool NEH::LoadFromFile(std::string fileName)
 				file >> timeTmp;
 				if (!file.fail())
 				{
-					_machines[i]._timesForJobs.push_back(std::make_pair(j, timeTmp));
+					_machines[i]._timesForJobs.push_back(std::make_pair(j+1, timeTmp));
 				}
 				else
 					return false;
@@ -67,20 +67,20 @@ int NEH::countTime(std::vector<std::pair<int, int>> jobOrder)
 		std::vector<std::pair<int, int>> MachineTimesVector0
 		{ std::begin(_machines[0]._timesForJobs), std::end(_machines[0]._timesForJobs) };
 
-		timesForMachines[0] += MachineTimesVector0[(*itJobOrder).first-1].second;
+		timesForMachines[0] += MachineTimesVector0[(*itJobOrder).first - 1].second;
 
-		for ( int i = 1; i < _machines.size(); i++ )
+		for (int i = 1; i < _machines.size(); i++)
 		{
 			std::vector<std::pair<const int, const int>> MachineTimesVector2
-				{ std::begin(_machines[i]._timesForJobs), std::end(_machines[i]._timesForJobs) };
+			{ std::begin(_machines[i]._timesForJobs), std::end(_machines[i]._timesForJobs) };
 
-			
+
 			timeGap = timeForSecondMachineHaveToWait(timesForMachines, i);
 
 			if (timeGap != 0)
-				timesForMachines[i] += MachineTimesVector2[std::get<0>(*itJobOrder)-1].second + timeGap;
+				timesForMachines[i] += MachineTimesVector2[std::get<0>(*itJobOrder) - 1].second + timeGap;
 			else
-				timesForMachines[i] += MachineTimesVector2[std::get<0>(*itJobOrder)-1].second;
+				timesForMachines[i] += MachineTimesVector2[std::get<0>(*itJobOrder) - 1].second;
 		}
 	}
 	std::cout << timesForMachines.back() << " dla :";
@@ -97,19 +97,19 @@ int NEH::timeForSecondMachineHaveToWait(std::vector<int> timesForMachines, int n
 void NEH::printSumForTask()
 {
 	for (const auto & e : _sumForTask)
-		std::cout << "("<< e.first << "," << e.second << "),";
+		std::cout << "(" << e.first << "," << e.second << "),";
 	std::cout << std::endl;
 }
 
 void NEH::StepOne()
 {
 	std::vector<std::pair<int, int>> sumForTasks(_machines[0]._timesForJobs.size()); /* Pary w postaci : nr zadania, suma dla tego zadanka*/
-	
+
 	for (auto & e : _machines)
 	{
 		for (auto & i : e._timesForJobs)
 		{
-			sumForTasks[i.first - 1].second = sumForTasks[i.first-1].second + i.second;
+			sumForTasks[i.first - 1].second = sumForTasks[i.first - 1].second + i.second;
 			sumForTasks[i.first - 1].first = i.first;
 		}
 	}
@@ -127,19 +127,19 @@ void NEH::StepTwo()
 
 const std::pair<int, int> & NEH::StepThree(std::vector<std::pair<int, int>> & sumForTaskTmp)
 {
-	
+
 	return(*std::max_element(std::begin(sumForTaskTmp), std::end(sumForTaskTmp),
 		[](const std::pair<int, int> & first, const std::pair<int, int> & second)
-		{
-			return(first.second < second.second);
-		}));
-		
+	{
+		return(first.second < second.second);
+	}));
+
 
 }
 
 void NEH::StepFour()
 {
-	
+
 	std::vector<std::pair<int, int>> sumForTaskTmp = _sumForTask;
 	while (sumForTaskTmp.empty() != true)
 	{
@@ -150,7 +150,7 @@ void NEH::StepFour()
 
 
 		std::vector<std::vector<std::pair<int, int>>> permutations;
-		for (unsigned int i = 0; i < optimalTaskList.size()+1; i++)
+		for (unsigned int i = 0; i < optimalTaskList.size() + 1; i++)
 		{
 
 			std::vector<std::pair<int, int>> tmp = optimalTaskList;
@@ -179,5 +179,5 @@ void NEH::StepFour()
 		}
 		std::cout << " z czasem: " << bestTime << std::endl;
 	}
-		
+
 }
