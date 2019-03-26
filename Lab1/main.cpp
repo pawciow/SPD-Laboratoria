@@ -58,7 +58,7 @@ void Test3Neh()
 {
 	NEH algorithm;
 	Machine first, second, third;
-
+	/*
 	first.LoadTimes({ {1,1}, {2,9},{3,7},{4,4} });
 	second.LoadTimes({ {1,3},{2,3},{3,8},{4,8} });
 	third.LoadTimes({ {1,8},{2,5},{3,6},{4,7} });
@@ -66,7 +66,8 @@ void Test3Neh()
 	algorithm.LoadData(first);
 	algorithm.LoadData(second);
 	algorithm.LoadData(third);
-
+	*/
+	algorithm.LoadFromFile("cos.txt");
 	algorithm.DO();
 
 	std::cout << "Optimal result : " << std::endl;
