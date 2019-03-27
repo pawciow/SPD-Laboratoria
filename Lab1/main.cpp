@@ -12,6 +12,7 @@ int main()
 	Test2Neh();
 	Test3Neh();
 
+
 	NEH alg;
 	alg.LoadFromFile("cos.txt");
 	int a;
