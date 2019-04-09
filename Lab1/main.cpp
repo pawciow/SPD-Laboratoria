@@ -1,20 +1,21 @@
 #include "JohnsonsAlgorithm.h"
 #include "NEH.h"
 #include "main.h"
-
+#include "SA_algorithm.h"
 void testForJohnsonsAlgorithm();
 
 int main()
 {
-	testForJohnsonsAlgorithm();
+	//testForJohnsonsAlgorithm();
 
-	Test1Neh();
-	Test2Neh();
-	Test3Neh();
-
-
-	NEH alg;
-	alg.LoadFromFile("cos.txt");
+	//Test1Neh();
+	//Test2Neh();
+	//Test3Neh();
+	
+	SA example(100, 0.1);
+	example.setExampleFromFile("cos.txt");
+	example.getStartingState();
+	example.StartComputing();
 	int a;
 	std::cin >> a;
 	return 0;

@@ -13,6 +13,8 @@ public:
 	bool LoadFromFile(std::string fileName);
 	int countTime(std::vector<std::pair<int, int>> jobOrder);
 	int timeForSecondMachineHaveToWait(std::vector<int> timesForMachines, int number);
+	std::vector<std::pair<int, int>> optimalTaskList;
+
 private:
 	void StepOne();
 	void StepTwo();
@@ -21,7 +23,6 @@ private:
 	std::vector<Machine> _machines;
 	std::vector<std::pair<int, int>> _sumForTask; /* Pary w postaci : nr zadania, suma dla tego zadanka*/
 	void printSumForTask();
-	std::vector<std::pair<int,int>> optimalTaskList;
 	void countTimeForList(std::vector<std::pair<int, int>> taskList)
 	{
 		std::cout << "TMP DEBUG";
