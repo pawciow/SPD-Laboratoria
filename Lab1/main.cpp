@@ -11,11 +11,16 @@ int main()
 	//Test1Neh();
 	//Test2Neh();
 	//Test3Neh();
-	
-	SA example(100, 0.1);
+	std::vector<int> results;
+	for (int i = 0; i < 10; i++)
+	{		SA example(10000, 0.01);
 	example.setExampleFromFile("cos.txt");
-	example.getStartingState();
 	example.StartComputing();
+	results.push_back(example._endTime);
+}
+	std::cout << std::endl;
+	for (auto e : results)
+		std::cout << " " << e;
 	int a;
 	std::cin >> a;
 	return 0;

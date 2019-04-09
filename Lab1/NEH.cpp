@@ -83,7 +83,7 @@ int NEH::countTime(std::vector<std::pair<int, int>> jobOrder)
 				timesForMachines[i] += MachineTimesVector2[std::get<0>(*itJobOrder) - 1].second;
 		}
 	}
-	std::cout << timesForMachines.back() << " dla :";
+	//std::cout << timesForMachines.back() << " dla :";
 	return timesForMachines.back();
 }
 

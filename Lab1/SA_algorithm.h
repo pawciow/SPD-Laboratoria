@@ -13,12 +13,18 @@ public:
 	void getStartingState();
 	void setExampleFromFile(std::string fileName);
 	void StartComputing();
+	int _endTime;
+
 protected:
 	int _temperature; 
 	double _step;
-	virtual std::vector<std::pair<int, int>> & generateMovement();
+	std::vector<std::pair<int, int>> newInstance;
+
+	void lowerTemperature();
+	int getRandomInt();
 	double getRandomDistribution();
 	double getPossibility(std::vector<std::pair<int, int>> newInstance);
+
+	virtual std::vector<std::pair<int, int>> & generateMovement();
 	bool isBetterResult();
-	void lowerTemperature();
 };
