@@ -12,8 +12,8 @@ int main()
 	//Test2Neh();
 	//Test3Neh();
 	std::vector<int> results;
-	for (int i = 0; i < 10; i++)
-	{		SA example(10000, 0.01);
+	for (int i = 0; i < 50; i++)
+	{		SA example(1000, 0.01);
 	example.setExampleFromFile("cos.txt");
 	example.StartComputing();
 	results.push_back(example._endTime);
@@ -21,8 +21,7 @@ int main()
 	std::cout << std::endl;
 	for (auto e : results)
 		std::cout << " " << e;
-	int a;
-	std::cin >> a;
+
 	return 0;
 }
 
