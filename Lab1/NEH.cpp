@@ -5,9 +5,9 @@ void NEH::DO()
 {
 	std::cout << "Starting the NEH algorithm. Step one:" << std::endl;
 	StepOne();
-	printSumForTask();
+	//printSumForTask();
 	StepTwo();
-	printSumForTask();
+	//printSumForTask();
 	StepFour();
 }
 
@@ -39,7 +39,7 @@ bool NEH::LoadFromFile(std::string fileName)
 				file >> timeTmp;
 				if (!file.fail())
 				{
-					_machines[i]._timesForJobs.push_back(std::make_pair(j+1, timeTmp));
+					_machines[i]._timesForJobs.push_back(std::make_pair(j + 1, timeTmp));
 				}
 				else
 					return false;
@@ -164,20 +164,20 @@ void NEH::StepFour()
 				bestPlace = i;
 			}
 
-			for (const auto & e : tmp)
-			{
-				std::cout << "(" << e.first << "," << e.second << ")";
-			}
-			std::cout << std::endl;
+			//for (const auto & e : tmp)
+			//{
+			//	std::cout << "(" << e.first << "," << e.second << ")";
+			//}
+			//std::cout << std::endl;
 		}
 		optimalTaskList.insert(optimalTaskList.begin() + bestPlace, taskToAdd);
 		sumForTaskTmp.pop_back();
 
-		std::cout << "Optymalna droga po tym kroku: ";
-		for (const auto & e : optimalTaskList) {
-			std::cout << e.first << " ";
-		}
-		std::cout << " z czasem: " << bestTime << std::endl;
+		//std::cout << "Optymalna droga po tym kroku: ";
+		//for (const auto & e : optimalTaskList) {
+		//	std::cout << e.first << " ";
+		//}
+		//std::cout << " z czasem: " << bestTime << std::endl;
 	}
 
 }
