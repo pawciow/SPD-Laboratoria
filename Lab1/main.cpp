@@ -6,22 +6,32 @@ void testForJohnsonsAlgorithm();
 
 int main()
 {
+	int a;
 	//testForJohnsonsAlgorithm();
 
 	//Test1Neh();
 	//Test2Neh();
 	//Test3Neh();
 	std::vector<int> results;
-	for (int i = 0; i < 50; i++)
-	{		SA example(1000, 0.01);
-	example.setExampleFromFile("cos.txt");
-	example.StartComputing();
-	results.push_back(example._endTime);
-}
+	double sum = 0;
+
+	for (int i = 0; i < 10; i++)
+	{
+		SA example(100, 0.1);
+		example.setExampleFromFile("cos.txt");
+		example.StartComputing();
+		results.push_back(example._endTime);
+		sum += example._endTime;
+	}
 	std::cout << std::endl;
 	for (auto e : results)
+	{
 		std::cout << " " << e;
+	}
+	sum = sum / 10;
+	std::cout << std::endl << sum << std::endl;
 
+	std::cin >> a;
 	return 0;
 }
 
@@ -67,7 +77,6 @@ void Test3Neh()
 	first.LoadTimes({ {1,1}, {2,9},{3,7},{4,4} });
 	second.LoadTimes({ {1,3},{2,3},{3,8},{4,8} });
 	third.LoadTimes({ {1,8},{2,5},{3,6},{4,7} });
-
 	algorithm.LoadData(first);
 	algorithm.LoadData(second);
 	algorithm.LoadData(third);
