@@ -10,11 +10,13 @@ void SA::setExampleFromFile(std::string fileName)
 void SA::getStartingState()
 {
 	DO();
+	std::random_shuffle(optimalTaskList.begin(), optimalTaskList.end());
 }
+
 
 double SA::getRandomDistribution()
 {
-	std::uniform_real_distribution<double> distr(0.0 , 1.1);
+	std::uniform_real_distribution<double> distr(0.0, 1.1);
 	std::default_random_engine generator;
 	return distr(generator);
 }
@@ -22,7 +24,7 @@ int SA::getRandomInt()
 {
 	std::random_device rd;  //Will be used to obtain a seed for the random number engine
 	std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-	std::uniform_int_distribution<> dis(0, optimalTaskList.size()-1);
+	std::uniform_int_distribution<> dis(0, optimalTaskList.size() - 1);
 	return dis(gen);
 }
 
@@ -35,6 +37,7 @@ double SA::getPossibility(std::vector<std::pair<int, int>> newInstance)
 		possibility = exp((Pi - newPi) / _temperature);
 	else
 		possibility = 1;
+		//possibility = exp((Pi - newPi) / _temperature);
 	return possibility;
 }
 
@@ -49,17 +52,17 @@ void SA::StartComputing()
 		if (possibility > getRandomDistribution())
 			optimalTaskList = newInstance;
 		lowerTemperature();
-		std::cout <<std::endl << "At temperature : " << _temperature << " OptimalTaskList: ";
-		for (auto e : optimalTaskList)
-			std::cout << e.first << "," << e.second << " ";
+		//std::cout << std::endl << "At temperature : " << _temperature << " OptimalTaskList: ";
+		//for (auto e : optimalTaskList)
+			//std::cout << e.first << "," << e.second << " ";
 	}
 	_endTime = countTime(optimalTaskList);
-	std::cout << " \n \n " << "Porównianie czasów: na pocz¹tku:" << beginTime << " na koñcu: " << _endTime;
+	std::cout << " \n \n " << "PorÃ³wnianie czasÃ³w: na poczÂ¹tku:" << beginTime << " na koÃ±cu: " << _endTime;
 }
 
 void SA::lowerTemperature()
 {
-	_temperature =  _temperature - (_temperature * _step);
+	_temperature = _temperature - (_temperature * _step);
 }
 
 std::vector<std::pair<int, int>> & SA::generateMovement()
@@ -67,6 +70,19 @@ std::vector<std::pair<int, int>> & SA::generateMovement()
 	unsigned int a = getRandomInt();
 	unsigned int b = getRandomInt();
 	newInstance = optimalTaskList;
+
+	std::pair<int, int> tmp;
+
+
+	/* Insert */
+	/*
+	auto it = newInstance.begin();
+	tmp = newInstance[b];
+	newInstance.erase(it+b);
+	it = newInstance.begin();
+	newInstance.insert(it + a, tmp);
+	*/	
+	/*Swap */
 	std::swap(newInstance[a], newInstance[b]);
 	return newInstance;
 }
