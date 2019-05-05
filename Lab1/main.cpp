@@ -2,15 +2,32 @@
 #include "NEH.h"
 #include "main.h"
 #include "SA_algorithm.h"
+#include"Schrage.h"
 void testForJohnsonsAlgorithm();
-
+void TestSchrageOnAllMachines();
 int main()
 {
-	int a;
 
-
-	std::cin >> a;
+	TestSchrageOnAllMachines();
+	
 	return 0;
+}
+
+void TestSchrageOnFile(std::string fileName)
+{
+	Schrage tmp;
+	tmp.LoadTasks(fileName);
+	tmp();
+}
+
+void TestSchrageOnAllMachines()
+{
+	std::vector<std::string> a{ "in50.txt", "in100.txt", "in200.txt" };
+	for (auto e : a)
+	{
+		std::cout << e << "  ";
+		TestSchrageOnFile(e);
+	}
 }
 
 void Test1Neh()

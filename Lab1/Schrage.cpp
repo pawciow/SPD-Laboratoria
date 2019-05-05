@@ -1,40 +1,53 @@
 #include "Schrage.h"
 
-/*
-std::list<RPQ> findPreparedTask(int time, std::list<RPQ> listWhereToFind)
+
+void Schrage::LoadTasks(std::string filename)
 {
-	std::list<RPQ> a;
-	std::transform(listWhereToFind.begin(), listWhereToFind.end(), a.begin(), std::back_inserter(a),
-		[time](RPQ & tmp) {
-			return tmp.Q > time;
-		}
-	);
-	return a;
-}*/
-Schrage::Schrage()
+	std::ifstream fileStream(filename);
+	unsigned int a, size;
+	unsigned int r,p,q;
+	fileStream >> size >> a;
+	for (unsigned int i = 0; i < size; i++)
+	{
+		fileStream >> r >> p >> q;
+		notOrderedTask.push({ r,p,q });
+	}
+	fileStream.close();
+}
+Schrage::Schrage() {}
+
+void Schrage::operator() ()
 {
-	int time; /*min r*/
-	int i; /*number */
-	std::list<RPQ> partialOrder;
+	unsigned int time{}; /*min r*/
+	unsigned int i{}; /*number */
+	unsigned int Cmax{ 0 };
+	std::list<RPQ> order;
 
 	while (!orderedTask.empty() || !notOrderedTask.empty())
 	{
-		/*std::list<RPQ> preparedTaskSoFar = findPreparedTask(time, notOrderedTask);
-		while (!notOrderedTask.empty() && !preparedTaskSoFar.empty()) 
-		{
-			std::transform(orderedTask.begin(), orderedTask.end(), std::back_inserter(orderedTask), 
-				[notOrderedTask]
-			)
-			orderedTask.push_back(e);
-		}*/
-		while (!notOrderedTask.empty() && notOrderedTask.top().Q > time)
+		while (!notOrderedTask.empty() && notOrderedTask.top().R <= time)
 		{
 			orderedTask.push(notOrderedTask.top());
 			notOrderedTask.pop();
 		}
-		
+
+		if (orderedTask.empty())
+		{
+			time = notOrderedTask.top().R;
+		}
+		else
+		{
+			order.push_back(orderedTask.top());
+			orderedTask.pop();
+
+			time += order.back().P;
+			if (time + order.back().Q > Cmax)
+				Cmax = time + order.back().Q;
+		}
 
 	}
+	std::cout << Cmax << std::endl;
+
 }
 
 

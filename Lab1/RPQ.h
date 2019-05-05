@@ -3,12 +3,27 @@
 class RPQ
 {
 public:
-	RPQ(int r, int p, int q);
-	int R, P, Q;
+	RPQ() = default;
+	RPQ(unsigned int r, unsigned int p, unsigned int q);
+	unsigned int R, P, Q;
 	virtual ~RPQ();
-	bool operator() (RPQ a, RPQ b)
+
+};
+
+class RpqComparatorByR
+{
+public:
+	bool operator() (RPQ a, RPQ b) /*For priority Queue */
 	{
-		return a.Q > b.Q;
+		return a.R > b.R;
 	}
 };
 
+class RpqComparatorByQ
+{
+public:
+	bool operator() (RPQ a, RPQ b) /*For priority Queue */
+	{
+		return a.Q < b.Q;
+	}
+};
