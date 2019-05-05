@@ -10,7 +10,7 @@ void SA::setExampleFromFile(std::string fileName)
 void SA::getStartingState()
 {
 	DO();
-	std::random_shuffle(optimalTaskList.begin(), optimalTaskList.end());
+	std::random_shuffle(optimalTaskList.begin(), optimalTaskList.end()); // Tutaj robimy losowy stan początkowy
 }
 
 
@@ -22,8 +22,8 @@ double SA::getRandomDistribution()
 }
 int SA::getRandomInt()
 {
-	std::random_device rd;  //Will be used to obtain a seed for the random number engine
-	std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+	std::random_device rd;
+	std::mt19937 gen(rd());
 	std::uniform_int_distribution<> dis(0, optimalTaskList.size() - 1);
 	return dis(gen);
 }
@@ -36,8 +36,14 @@ double SA::getPossibility(std::vector<std::pair<int, int>> newInstance)
 	if (newPi >= Pi)
 		possibility = exp((Pi - newPi) / _temperature);
 	else
-		possibility = 1;
-		//possibility = exp((Pi - newPi) / _temperature);
+	{
+		possibility = exp((Pi - newPi) / _temperature);
+
+		std::cout << "WARTOSC: " << possibility << std::endl;
+	}
+		//possibility = 1;
+		
+
 	return possibility;
 }
 
@@ -52,12 +58,9 @@ void SA::StartComputing()
 		if (possibility > getRandomDistribution())
 			optimalTaskList = newInstance;
 		lowerTemperature();
-		//std::cout << std::endl << "At temperature : " << _temperature << " OptimalTaskList: ";
-		//for (auto e : optimalTaskList)
-			//std::cout << e.first << "," << e.second << " ";
 	}
 	_endTime = countTime(optimalTaskList);
-	std::cout << " \n \n " << "Porównianie czasów: na pocz¹tku:" << beginTime << " na koñcu: " << _endTime;
+	std::cout << " \n \n " << "Porównianie czasów: na poczatku:" << beginTime << " na koncu: " << _endTime;
 }
 
 void SA::lowerTemperature()

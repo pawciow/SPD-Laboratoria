@@ -7,29 +7,7 @@ void testForJohnsonsAlgorithm();
 int main()
 {
 	int a;
-	//testForJohnsonsAlgorithm();
 
-	//Test1Neh();
-	//Test2Neh();
-	//Test3Neh();
-	std::vector<int> results;
-	double sum = 0;
-
-	for (int i = 0; i < 10; i++)
-	{
-		SA example(100, 0.1);
-		example.setExampleFromFile("cos.txt");
-		example.StartComputing();
-		results.push_back(example._endTime);
-		sum += example._endTime;
-	}
-	std::cout << std::endl;
-	for (auto e : results)
-	{
-		std::cout << " " << e;
-	}
-	sum = sum / 10;
-	std::cout << std::endl << sum << std::endl;
 
 	std::cin >> a;
 	return 0;
