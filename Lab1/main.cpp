@@ -17,16 +17,7 @@ std::ostream& operator<<(std::ostream & os, RPQ x)
 int main()
 {
 	int pause;
-
-	std::vector<RPQ> a = { {3,2,1}, {5,1,23} ,{5,7,6} ,{1,2,3} };
-	Heap<RPQ, RpqComparatorByR> heap(a,4);
-	while(heap.empty())
-	{
-		heap.showTop();
-		heap.pop();
-	}
-
-	//TestSchrageOnAllMachines();
+	TestSchrageOnAllMachines();
 	
 	std::cin >> pause;
 	return 0;

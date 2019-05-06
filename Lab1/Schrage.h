@@ -1,17 +1,19 @@
 #pragma once
-#include<list>
+#include <list>
 #include <algorithm>
-#include<iostream>
-#include<queue>
-#include"RPQ.h"
+#include <iostream>
+#include <queue>
+#include "RPQ.h"
+#include "Heap.hpp"
 #include <fstream>
+
+
 class Schrage
 {
 public:
 	Schrage();
 	void operator() ();
 	void LoadTasks(std::string filename);
-	//std::list<RPQ> notOrderedTask, orderedTask;
 	virtual ~Schrage();
 	void SchragePmtn();
 private:
