@@ -49,11 +49,11 @@ void Schrage::operator() ()
 	std::cout << Cmax << std::endl;
 
 }
-
+/*
 void Schrage::SchragePmtn() 
 {
-	unsigned int time{}; /*min r*/
-	unsigned int i{}; /*number */
+	unsigned int time{}; 
+	unsigned int i{}; 
 	unsigned int Cmax{ 0 };
 
 	std::vector<RPQ> order;
@@ -120,7 +120,7 @@ void Schrage::SchragePmtn()
 	std::cout << Cmax << std::endl;
 
 }
-
+*/
 Schrage::~Schrage()
 {
 }

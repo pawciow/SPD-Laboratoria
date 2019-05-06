@@ -17,7 +17,7 @@ public:
 	virtual ~Schrage();
 	void SchragePmtn();
 private:
-	std::priority_queue <RPQ, std::vector<RPQ>, RpqComparatorByR> notOrderedTask;
-	std::priority_queue <RPQ, std::vector<RPQ>, RpqComparatorByQ>	orderedTask;
+	Heap <RPQ, RpqComparatorByR>  notOrderedTask;
+	Heap <RPQ, RpqComparatorByQ>	orderedTask;
 };
 

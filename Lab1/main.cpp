@@ -27,8 +27,8 @@ void TestSchrageOnFile(std::string fileName)
 {
 	Schrage tmp;
 	tmp.LoadTasks(fileName);
-	tmp.SchragePmtn();
-
+	//tmp.SchragePmtn();
+	tmp();
 }
 
 void TestSchrageOnAllMachines()
