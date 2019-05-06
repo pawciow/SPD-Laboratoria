@@ -13,6 +13,7 @@ public:
 	void LoadTasks(std::string filename);
 	//std::list<RPQ> notOrderedTask, orderedTask;
 	virtual ~Schrage();
+	void SchragePmtn();
 private:
 	std::priority_queue <RPQ, std::vector<RPQ>, RpqComparatorByR> notOrderedTask;
 	std::priority_queue <RPQ, std::vector<RPQ>, RpqComparatorByQ>	orderedTask;
