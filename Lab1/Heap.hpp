@@ -7,6 +7,7 @@ template <typename T, typename Comparator> class Heap
 public:
 	Heap(std::vector<T> data, int dataSize);
 	void showTop();
+	void push(T value);
 	bool empty();
 	T pop();
 
@@ -24,6 +25,16 @@ Heap<T, Comparator>::Heap(std::vector<T> data, int dataSize)
 {
 	_size = dataSize;
 	_data = data;
+	for (int i = _size / 2; i >= 0; --i)
+		restoreHeap(i);
+}
+
+template <typename T, typename Comparator>
+void Heap<T, Comparator>::push(T val)
+{
+	_size++;
+	_data.push_back(T);
+
 	for (int i = _size / 2; i >= 0; --i)
 		restoreHeap(i);
 }
