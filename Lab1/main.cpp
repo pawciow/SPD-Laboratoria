@@ -27,7 +27,12 @@ void TestSchrageOnFile(std::string fileName)
 {
 	Schrage tmp;
 	tmp.LoadTasks(fileName);
-	//tmp.SchragePmtn();
+	tmp();
+}
+void TestSchragePmtnOnFile(std::string fileName)
+{
+	SchragePmtn tmp;
+	tmp.LoadTasks(fileName);
 	tmp();
 }
 
@@ -38,6 +43,8 @@ void TestSchrageOnAllMachines()
 	{
 		std::cout << e << "  ";
 		TestSchrageOnFile(e);
+		std::cout << "  PTM: ";
+		TestSchragePmtnOnFile(e);
 	}
 }
 

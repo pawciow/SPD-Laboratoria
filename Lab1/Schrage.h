@@ -12,12 +12,18 @@ class Schrage
 {
 public:
 	Schrage();
-	void operator() ();
+	virtual void operator() ();
 	void LoadTasks(std::string filename);
 	virtual ~Schrage();
-	void SchragePmtn();
-private:
+protected:
 	Heap <RPQ, RpqComparatorByR>  notOrderedTask;
 	Heap <RPQ, RpqComparatorByQ>	orderedTask;
 };
 
+class SchragePmtn : public Schrage
+{
+public:
+	SchragePmtn();
+	void operator() () final;
+	virtual ~SchragePmtn();
+};

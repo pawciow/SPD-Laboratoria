@@ -49,16 +49,23 @@ void Schrage::operator() ()
 	std::cout << Cmax << std::endl;
 
 }
-/*
-void Schrage::SchragePmtn() 
+
+Schrage::~Schrage()
+{
+}
+
+
+SchragePmtn::SchragePmtn() 
+{}
+
+void SchragePmtn::operator() ()
 {
 	unsigned int time{}; 
 	unsigned int i{}; 
 	unsigned int Cmax{ 0 };
 
 	std::vector<RPQ> order;
-	
-	std::vector<RPQ> listaprzerwan;
+	std::list<RPQ> interrupts;
 
 	while (!orderedTask.empty() || !notOrderedTask.empty())
 	{
@@ -75,15 +82,14 @@ void Schrage::SchragePmtn()
 		}
 		else
 		{
+			while (!interrupts.empty())
+				interrupts.pop_back();
 
-			while (!listaprzerwan.empty())
-				listaprzerwan.pop_back();
-
-			for (int i = 0; i < (int)notOrderedTask.size(); i++)
+			for (int i = 0; i < notOrderedTask.size; i++)
 				if ((orderedTask.top().P + time > notOrderedTask.top().R) && (orderedTask.top().Q < notOrderedTask.top().Q))
-					listaprzerwan.push_back(notOrderedTask.top());
+					interrupts.push_back(notOrderedTask.top());
 
-			if (listaprzerwan.empty())
+			if (interrupts.empty())
 			{
 				order.push_back(orderedTask.top());
 				orderedTask.pop();
@@ -99,7 +105,7 @@ void Schrage::SchragePmtn()
 				orderedTask.pop();
 				RPQ part2 = part1;
 
-				part1.P = listaprzerwan.back().R - time;
+				part1.P = interrupts.back().R - time;
 				part2.P -= part1.P;
 				orderedTask.push(part2);
 
@@ -109,18 +115,11 @@ void Schrage::SchragePmtn()
 
 				if (time + order.back().Q > Cmax)
 					Cmax = time + order.back().Q;
-
-
-
 			}
-
 		}
-
 	}
 	std::cout << Cmax << std::endl;
+}
 
-}
-*/
-Schrage::~Schrage()
-{
-}
+SchragePmtn::~SchragePmtn()
+{}
