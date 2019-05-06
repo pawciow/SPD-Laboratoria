@@ -3,12 +3,30 @@
 #include "main.h"
 #include "SA_algorithm.h"
 #include"Schrage.h"
+#include "Heap.hpp"
+#include <iostream>
+
 void testForJohnsonsAlgorithm();
 void TestSchrageOnAllMachines();
+std::ostream& operator<<(std::ostream & os, RPQ x)
+{
+	os << "R:" << x.R << " P:" << x.P << " Q:" << x.Q;
+	return os;
+}
+
 int main()
 {
 	int pause;
-	TestSchrageOnAllMachines();
+
+	std::vector<RPQ> a = { {3,2,1}, {5,1,23} ,{5,7,6} ,{1,2,3} };
+	Heap<RPQ, RpqComparatorByR> heap(a,4);
+	while(heap.empty())
+	{
+		heap.showTop();
+		heap.pop();
+	}
+
+	//TestSchrageOnAllMachines();
 	
 	std::cin >> pause;
 	return 0;
