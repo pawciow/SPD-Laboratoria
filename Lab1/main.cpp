@@ -7,9 +7,10 @@ void testForJohnsonsAlgorithm();
 void TestSchrageOnAllMachines();
 int main()
 {
-
+	int pause;
 	TestSchrageOnAllMachines();
 	
+	std::cin >> pause;
 	return 0;
 }
 
@@ -17,7 +18,8 @@ void TestSchrageOnFile(std::string fileName)
 {
 	Schrage tmp;
 	tmp.LoadTasks(fileName);
-	tmp();
+	tmp.SchragePmtn();
+
 }
 
 void TestSchrageOnAllMachines()
