@@ -13,7 +13,7 @@ public:
 	SchragePmtn schragePmtn;
 	int n;
 
-	RPQ PI_opt[2000];
+	//RPQ PI_opt[2000];
 	int U; // wartoœæ funkcji celu Cmax
 	int UB; // górne oszacowanie, upper bound
 	int LB; // dolne oszacowanie, lower bound

@@ -25,10 +25,10 @@ int Carlier::carlier()
 	if (U < UB)
 	{
 		UB = U;
-		for (i = 0; i < n; i++)
+		/*for (i = 0; i < n; i++)
 		{
 			PI_opt[i] = tmpTaskVector[i];
-		}
+		}*/
 	}
 
 	////////// KROK 3
@@ -164,7 +164,7 @@ int Carlier::find_a()
 int Carlier::find_c()
 {
 	c = -1;
-	int i;
+	int i =b;
 
 	for (i = b; i >= a; i--)
 	{
