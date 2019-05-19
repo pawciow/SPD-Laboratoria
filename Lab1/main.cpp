@@ -34,8 +34,8 @@ int main()
 	
 	int pause;
 	Schrage TMP; 
-	//TMP.LoadTasks("makuch_wyklad.txt");
-	TMP.LoadTasks("data.txt");
+	TMP.LoadTasks("makuch_wyklad.txt");
+	//TMP.LoadTasks("data.txt");
 	Carlier tmp;
 	int a = tmp.carlier(TMP.tasksVector, tmp.UB);
 	cout << "najlepszy wynik: " << a;

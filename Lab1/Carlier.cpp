@@ -3,12 +3,16 @@
 
 using namespace std;
 
-Carlier::Carlier() : a(0), b(0), c(-1), U(0), UB(INT_MAX), LB(0)
+Carlier::Carlier() : U(0), UB(INT_MAX), LB(0)
 {}
 
 int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 {
-	int U;
+	unsigned int a = 0; // numer pierwszego zadania w bloku K
+	unsigned int b = 0; // numer ostatniego zadania w bloku K
+	unsigned int c = 0; // numer zadania przeszkadzajacêgo, interference job
+
+	U = __UB__;
 	int i = 0;
 	//unsigned int R_PERMUTACJI_WYKONANIA_ZADAN_NA_MASZYNIE; //?? by³o u http://new.zsd.iiar.pwr.wroc.pl/files/zadania/CARLIER/AC.pdf
 
@@ -26,13 +30,17 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 	}
 
 	////////// KROK 3
-	find_b(taskVector, schrage.Cmax);
+	b = find_b(taskVector, U);
+	if (b == -1)
+		return U;
 
-	cout << "Zadanie b: " << b << " o numerze:" << taskVector[b].NR << endl;
-	find_a(taskVector, schrage.Cmax);
+//	cout << "Zadanie b: " << b << " o numerze:" << taskVector[b].NR << endl;
+	a = find_a(taskVector, U, b);
+	if (a == -1)
+		return U;
 
-	c = find_c(taskVector, schrage.Cmax);
-
+	c = find_c(taskVector, U, a, b);
+	
 	if (a == b)
 		return U; // TMP?
 //	cout << c << endl;
@@ -128,20 +136,20 @@ int Carlier::find_b(std::vector<RPQ> _tasks, int Cmax)
 		//cout << _tasks[i].timeWhenItsFinished << " + " << _tasks[i].Q << endl;
 		if (Cmax == _tasks[i].timeWhenItsFinished + _tasks[i].Q)
 		{
-			b = i;
-			cout << "Znaleziono zadanie numer: " << _tasks[b].NR << endl
+			cout << "Znaleziono zadanie numer: " << _tasks[i].NR << endl
 				 << "Które w kolejnoœæi jest: "  << i <<endl;
 
-			return b;
+			return i;
 
 		}
 	}
+	return -1;
 }
 
-int Carlier::find_a(std::vector<RPQ> _tasks, int Cmax)
+int Carlier::find_a(std::vector<RPQ> _tasks, int Cmax, int b)
 {
 	// cout << "Zatrzymam siê przed zadaniem: " << _tasks[b].NR << endl;  // TMP DEBUG
-	for (a = 0; a < b; a++)
+	for (int a = 0; a < b; a++)
 	{
 		unsigned int BIGSUM = 0;
 		BIGSUM = _tasks[a].R + _tasks[b].Q;
@@ -156,14 +164,13 @@ int Carlier::find_a(std::vector<RPQ> _tasks, int Cmax)
 
 }
 
-int Carlier::find_c(std::vector<RPQ> _tasks, int Cmax)
+int Carlier::find_c(std::vector<RPQ> _tasks, int Cmax, int a, int b)
 {
 	for (int i = b; i >= a; i--)
 	{
 		if (_tasks[i].Q < _tasks[b].Q)
 		{
-			c = i;
-			return c;
+			return i;
 		}
 	}
 
