@@ -32,16 +32,10 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 	////////// KROK 3
 	b = find_b(taskVector, U);
 	if (b == -1)
-		return U; // TMP? NIE WIEM CZY TAK POWINNO BYÆ, ALE TO ZAPOBIEGA WYWALANIU
+		return U; // Tego nie powinno byæ. To zapobiega wywalaniu, ale to jest Ÿle. Trzeba ogarn¹æ sk¹d to jest.
 
 	a = find_a(taskVector, U, b);
-	if (a == -1)
-		return U; // TMP? NIE WIEM CZY TAK POWINNO BYÆ, ALE TO ZAPOBIEGA WYWALANIU
-
 	c = find_c(taskVector, U, a, b);
-	
-	if (a == b)
-		return U; // TMP? NIE WIEM CZY TAK POWINNO BYÆ, ALE TO ZAPOBIEGA WYWALANIU?
 
 	if (c == -1)
 	{
@@ -50,7 +44,6 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 	}
 
 	// Krok 5:
-
 	RpqComparatorByR by_R;
 	RpqComparatorByQ by_Q;
 	unsigned int new_p;
@@ -59,10 +52,13 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 		new_p = +it->P;
 		std::cout << it->R << " " << it->P << " " << it->Q << " \n";
 	}
+	// KUBA TUTAJ COŒ SIÊ DZIEJE NIE TAK
+	// BO JAK ZMIENISZ SOBIE MIN_R I MIN_Q NP NA ODWRÓT, ¯E MINIMUM NA MAKSIMUM
+	// TO I TAK NIC NIE ZMIENIA.
+	// Tutaj zacznij œledztwo
 	/* IM NOT SURE ABOUT BOUNDARIES - I MEAN IF (C+1) OR +B(MAYBE B+1?)*/
-	auto min_r = max_element(taskVector.begin() + (c + 1), taskVector.begin() + b + 1, by_R);
-	auto min_q = min_element(taskVector.begin() + (c + 1), taskVector.begin() + b + 1, by_Q);// HAX: because this compartor gives the biggest
-	//auto min_p = max_element(taskVector.begin() + (c + 1), taskVector.begin() + b+1, by_P);
+	auto min_r = min_element(taskVector.begin() + (c + 1), taskVector.begin() + b , by_R);
+	auto min_q = max_element(taskVector.begin() + (c + 1), taskVector.begin() + b , by_Q);// HAX: because this compartor gives the biggest
 
 	RPQ temporary(min_r->R, min_r->P, min_q->Q, 1234);
 	cout << "min_r " << temporary.R << "suma p " << temporary.P << "min_Q " << temporary.Q;
@@ -103,7 +99,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 	LB = schragePmtn();
 
 	// Krok 13
-	if (LB < UB)
+	if (LB < UB) /* Np tutaj rzadko wchodzimy*/
 	{
 		UB = carlier(taskVector, U); // Krok 14
 	}
@@ -124,41 +120,25 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 
 int Carlier::find_b(std::vector<RPQ> _tasks, int Cmax)
 {
-	cout << "ZNAJDOWAINE B: \n ";
 
-	/*for (auto e : _tasks)
-	{
-		cout << e.NR << " " << e.timeWhenItsFinished << " \n";
-	}*/
 	unsigned int i = 0;
 	for (i = 0; i < _tasks.size(); i++)
-	{
-		//cout << "Czas zakoñczenia + Czas.Q";
-		//cout << _tasks[i].timeWhenItsFinished << " + " << _tasks[i].Q << endl;
 		if (Cmax == _tasks[i].timeWhenItsFinished + _tasks[i].Q)
-		{
-			cout << "Znaleziono zadanie numer: " << _tasks[i].NR << endl
-				 << "Które w kolejnoœæi jest: "  << i <<endl;
-
 			return i;
-
-		}
-	}
+	
 	return -1;
 }
 
 int Carlier::find_a(std::vector<RPQ> _tasks, int Cmax, int b)
 {
-	// cout << "Zatrzymam siê przed zadaniem: " << _tasks[b].NR << endl;  // TMP DEBUG
 	for (int a = 0; a < b; a++)
 	{
-		unsigned int BIGSUM = 0;
-		BIGSUM = _tasks[a].R + _tasks[b].Q;
+
 		unsigned int sum = 0;
 		for (unsigned int i = a; i <= b; i++)
 			sum = sum + _tasks[i].P;
-		BIGSUM = BIGSUM + sum;
-		if (BIGSUM == Cmax)
+
+		if (_tasks[a].R + _tasks[b].Q + sum == Cmax)
 			return a;
 	}
 	return -1;
