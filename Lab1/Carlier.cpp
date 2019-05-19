@@ -57,10 +57,14 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 	// TO I TAK NIC NIE ZMIENIA.
 	// Tutaj zacznij œledztwo
 	/* IM NOT SURE ABOUT BOUNDARIES - I MEAN IF (C+1) OR +B(MAYBE B+1?)*/
-	auto min_r = min_element(taskVector.begin() + (c + 1), taskVector.begin() + b , by_R);
-	auto min_q = max_element(taskVector.begin() + (c + 1), taskVector.begin() + b , by_Q);// HAX: because this compartor gives the biggest
-
-	RPQ temporary(min_r->R, min_r->P, min_q->Q, 1234);
+	unsigned int TMP1 = 0, TMP2 = 0, sumP = 0;
+	for (unsigned int i = c + 1; i < b; i++)
+	{
+		sumP = +taskVector[i].P;
+	}
+	TMP1 = max_element(taskVector.begin(), taskVector.end(), by_R)->R;
+	TMP2 = min_element(taskVector.begin(), taskVector.end(), by_Q)->Q;
+	RPQ temporary(TMP1, sumP, TMP2, 1234);
 	cout << "min_r " << temporary.R << "suma p " << temporary.P << "min_Q " << temporary.Q;
 
 	// Krok 6
@@ -70,7 +74,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 		toRemember_R = taskVector[c].R;
 	}
 
-	taskVector[c].R = max({ min_r->R, temporary.R + temporary.P });
+	taskVector[c].R = max({ taskVector[c].R, temporary.R + temporary.P }); //TO zmieni³em i zaczê³o siê zapêtlaæ
 	// Krok 7
 	schragePmtn.LoadTasks(taskVector);
 	LB = schragePmtn();
@@ -131,7 +135,7 @@ int Carlier::find_b(std::vector<RPQ> _tasks, int Cmax)
 
 int Carlier::find_a(std::vector<RPQ> _tasks, int Cmax, int b)
 {
-	for (int a = 0; a < b; a++)
+	for (unsigned int a = 0; a < b; a++)
 	{
 
 		unsigned int sum = 0;
