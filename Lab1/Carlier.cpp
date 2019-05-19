@@ -32,20 +32,16 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 	////////// KROK 3
 	b = find_b(taskVector, U);
 	if (b == -1)
-		return U;
+		return U; // TMP? NIE WIEM CZY TAK POWINNO BYÆ, ALE TO ZAPOBIEGA WYWALANIU
 
 	a = find_a(taskVector, U, b);
 	if (a == -1)
-		return U; // TMP?
+		return U; // TMP? NIE WIEM CZY TAK POWINNO BYÆ, ALE TO ZAPOBIEGA WYWALANIU
 
 	c = find_c(taskVector, U, a, b);
 	
 	if (a == b)
-		return U; // TMP?
-
-	cout << "Zadanie b:\n" << "\n\tNumer zadania: " << taskVector[b].NR << endl;
-	cout << "Zadanie a:\n" << "\n\tNumer zadania: " << taskVector[a].NR << endl;
-	// cout << "Zadanie Krytyczne(C):\n" << "\n\tNumer zadania: " << taskVector[c].NR << endl;
+		return U; // TMP? NIE WIEM CZY TAK POWINNO BYÆ, ALE TO ZAPOBIEGA WYWALANIU?
 
 	if (c == -1)
 	{
@@ -58,7 +54,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 	RpqComparatorByR by_R;
 	RpqComparatorByQ by_Q;
 	unsigned int new_p;
-	for (auto it = taskVector.begin() + c + 1; it <= taskVector.begin() + b; it++)
+	for (auto it = taskVector.begin() + c; it <= taskVector.begin() + b; it++)
 	{
 		new_p = +it->P;
 		std::cout << it->R << " " << it->P << " " << it->Q << " \n";
@@ -72,9 +68,12 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 	cout << "min_r " << temporary.R << "suma p " << temporary.P << "min_Q " << temporary.Q;
 
 	// Krok 6
-	//R_PERMUTACJI_WYKONANIA_ZADAN_NA_MASZYNIE = max({ R_PERMUTACJI_WYKONANIA_ZADAN_NA_MASZYNIE, temporary.R + temporary.P }); // Todo: ZROZUMIEÆ?
-	unsigned int toRembember_NR = taskVector[c].NR;
-	unsigned int toRemember_R = taskVector[c].R;
+	if (toRemember_R == -1)
+	{
+		toRembember_NR = taskVector[c].NR;
+		toRemember_R = taskVector[c].R;
+	}
+
 	taskVector[c].R = max({ min_r->R, temporary.R + temporary.P });
 	// Krok 7
 	schragePmtn.LoadTasks(taskVector);
@@ -83,7 +82,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 	// Krok 8
 	if (LB < UB)
 	{
-		UB = carlier(taskVector, UB); // Krok 9
+		UB = carlier(taskVector, U); // Krok 9
 	}
 	// Krok 10
 	for (auto & e : taskVector)
@@ -91,11 +90,13 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 		if (e.NR == toRembember_NR)
 			e.R = toRemember_R;
 	}
-
+	toRemember_R = -1;
 	// Krok 11
-	toRembember_NR = taskVector[c].NR;
-	unsigned int toRemember_P = taskVector[c].R;
-
+	if (toRemember_P = -1)
+	{
+		toRembember_NR = taskVector[c].NR;
+		toRemember_P = taskVector[c].R;
+	}
 	taskVector[c].Q = max({ taskVector[c].Q, temporary.Q + temporary.P });
 	// Krok 12
 	schragePmtn.LoadTasks(taskVector);
@@ -104,7 +105,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 	// Krok 13
 	if (LB < UB)
 	{
-		UB = carlier(taskVector, UB); // Krok 14
+		UB = carlier(taskVector, U); // Krok 14
 	}
 
 
@@ -114,7 +115,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 		if (e.NR == toRembember_NR)
 			e.P = toRemember_P;
 	}
-
+	toRemember_R = -1;
 	return U;
 
 }

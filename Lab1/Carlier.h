@@ -19,8 +19,11 @@ public:
 	int LB; // dolne oszacowanie, lower bound
 	int resultFromMakuchowski;
 
+	int toRemember_R = -1;
+	unsigned int toRembember_NR = 0;
+	int toRemember_P = -1;
 private:
-	
+
 	int find_a(std::vector<RPQ> _tasks, int Cmax, int b);
 	int find_b(std::vector<RPQ> _tasks, int Cmax);
 	int find_c(std::vector<RPQ> _tasks, int Cmax, int a, int b);
