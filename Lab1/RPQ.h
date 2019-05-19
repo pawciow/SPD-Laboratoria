@@ -30,3 +30,11 @@ public:
 		return a.Q < b.Q;
 	}
 };
+class RpqComparatorByP
+{
+public:
+	bool operator() (RPQ a, RPQ b) /*For priority Queue */
+	{
+		return a.P > b.P;
+	}
+};

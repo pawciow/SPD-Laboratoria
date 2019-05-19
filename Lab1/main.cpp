@@ -36,7 +36,7 @@ int main()
 	Schrage TMP; 
 	TMP.LoadTasks("makuch_wyklad.txt");
 	Carlier tmp;
-	int a = tmp.carlier(TMP.tasksVector);
+	int a = tmp.carlier(TMP.tasksVector, tmp.UB);
 	std::cin >> pause;
 	return 0;
 }

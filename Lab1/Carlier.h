@@ -9,17 +9,12 @@ class Carlier
 public:
 	Carlier();
 	~Carlier();
-	int carlier(std::vector<RPQ> taskVector);
+	int carlier(std::vector<RPQ> taskVector, int __UB__);
 
-private:
-
-
-
-	//RPQ PI_opt[2000];
 	int U; // wartoœæ funkcji celu Cmax
 	int UB; // górne oszacowanie, upper bound
 	int LB; // dolne oszacowanie, lower bound
-
+private:
 	unsigned int a; // numer pierwszego zadania w bloku K
 	unsigned int b; // numer ostatniego zadania w bloku K
 	unsigned int c; // numer zadania przeszkadzajacêgo, interference job
