@@ -34,16 +34,14 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 	if (b == -1)
 		return U;
 
-//	cout << "Zadanie b: " << b << " o numerze:" << taskVector[b].NR << endl;
 	a = find_a(taskVector, U, b);
 	if (a == -1)
-		return U;
+		return U; // TMP?
 
 	c = find_c(taskVector, U, a, b);
 	
 	if (a == b)
 		return U; // TMP?
-//	cout << c << endl;
 
 	cout << "Zadanie b:\n" << "\n\tNumer zadania: " << taskVector[b].NR << endl;
 	cout << "Zadanie a:\n" << "\n\tNumer zadania: " << taskVector[a].NR << endl;
@@ -100,6 +98,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 
 	taskVector[c].Q = max({ taskVector[c].Q, temporary.Q + temporary.P });
 	// Krok 12
+	schragePmtn.LoadTasks(taskVector);
 	LB = schragePmtn();
 
 	// Krok 13
@@ -107,6 +106,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 	{
 		UB = carlier(taskVector, UB); // Krok 14
 	}
+
 
 	// Krok 15
 	for (auto & e : taskVector)
@@ -180,3 +180,17 @@ int Carlier::find_c(std::vector<RPQ> _tasks, int Cmax, int a, int b)
 
 
 Carlier::~Carlier() {}
+
+void Carlier::LoadTasks(std::string fileName)
+{
+	std::ifstream fileStream(fileName);
+	unsigned int  size;
+	unsigned int r, p, q;
+	fileStream >> size >> resultFromMakuchowski;
+	for (unsigned int i = 0; i < size; i++)
+	{
+		fileStream >> r >> p >> q;
+		quickFIXVector.push_back({ r,p,q,i + 1 });
+	}
+	fileStream.close();
+}

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cstdio>
 #include <ctime>
-
+#include <string>
 
 /*
 void TesCarlierOnFile(std::string fileName)
@@ -30,15 +30,25 @@ void TestCarlierOnAllMachines()
 
 int main()
 {
-	//clock_t start = clock();
-	
-	int pause;
-	Schrage TMP; 
-	TMP.LoadTasks("makuch_wyklad.txt");
-	//TMP.LoadTasks("data.txt");
-	Carlier tmp;
-	int a = tmp.carlier(TMP.tasksVector, tmp.UB);
-	cout << "najlepszy wynik: " << a;
+	int score = 0;
+	int i = 9;
+	{
+		std::string file= "dane_testowe\\carlier\\";
+		file += std::to_string(i);
+		file += ".txt";
+
+		Carlier tmp;
+		tmp.LoadTasks(file);
+		int a = tmp.carlier(tmp.quickFIXVector, tmp.UB);
+		cout << "\n najlepszy wynik: " << a;
+		if (tmp.resultFromMakuchowski == a)
+		{
+			score++;
+			std::cout << "DOBRZE! \n";
+		}
+			
+	}
+	cout << "by³o dobrze: " << score;
 	return 0;
 }
 
