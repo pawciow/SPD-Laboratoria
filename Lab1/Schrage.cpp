@@ -16,6 +16,13 @@ void Schrage::LoadTasks(std::string filename)
 	}
 	fileStream.close();
 }
+
+void Schrage::LoadTasks(std::vector<RPQ> _tasksVector)
+{
+	tasksVector = _tasksVector;
+	for (const auto & e : tasksVector)
+		notOrderedTask.push(e);
+}
 Schrage::Schrage() {}
 
 int Schrage::operator() ()
@@ -23,7 +30,7 @@ int Schrage::operator() ()
 	unsigned int time{}; /*min r*/
 	unsigned int i{}; /*number */
 	unsigned int tmpCmax{ 0 };
-	std::list<RPQ> order;
+	std::vector<RPQ> order;
 
 	while (!orderedTask.empty() || !notOrderedTask.empty())
 	{
@@ -43,6 +50,7 @@ int Schrage::operator() ()
 			orderedTask.pop();
 
 			time += order.back().P;
+			order.back().timeWhenItsFinished = time; // FOR CARLIER
 			if (time + order.back().Q > tmpCmax)
 				tmpCmax = time + order.back().Q;
 		}
@@ -50,6 +58,7 @@ int Schrage::operator() ()
 	}
 	std::cout << tmpCmax << std::endl;
 	Cmax = tmpCmax;
+	resultOrder = order;
 	return Cmax;
 }
 
@@ -114,6 +123,8 @@ int SchragePmtn::operator() ()
 
 				order.push_back(part1);
 
+				order.back().timeWhenItsFinished = time; // FOR CARLIER
+
 				time += order.back().P;
 
 				if (time + order.back().Q > tmpCmax)
@@ -123,6 +134,7 @@ int SchragePmtn::operator() ()
 	}
 	std::cout << tmpCmax << std::endl;
 	Cmax = tmpCmax;
+	resultOrder = order;
 	return Cmax;
 }
 

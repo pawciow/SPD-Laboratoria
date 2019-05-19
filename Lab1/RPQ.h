@@ -8,7 +8,7 @@ class RPQ
 public:
 	RPQ() = default;
 	RPQ(unsigned int r, unsigned int p, unsigned int q, unsigned int nr);
-	unsigned int R, P, Q, NR;
+	unsigned int R, P, Q, NR, timeWhenItsFinished;
 	virtual ~RPQ();
 
 };
