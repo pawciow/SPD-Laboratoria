@@ -34,10 +34,11 @@ int main()
 	
 	int pause;
 	Schrage TMP; 
-	TMP.LoadTasks("makuch_wyklad.txt");
+	//TMP.LoadTasks("makuch_wyklad.txt");
+	TMP.LoadTasks("data.txt");
 	Carlier tmp;
 	int a = tmp.carlier(TMP.tasksVector, tmp.UB);
-	std::cin >> pause;
+	cout << "najlepszy wynik: " << a;
 	return 0;
 }
 

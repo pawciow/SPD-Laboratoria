@@ -39,11 +39,13 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 	//cout << a << endl;
 	c = find_c(taskVector, U);
 
+	if (a == b)
+		exit(1);
 //	cout << c << endl;
 
-//	cout << "Zadanie b:\n" << "\n\tNumer zadania: " << taskVector[b].NR << endl;
-	//cout << "Zadanie a:\n" << "\n\tNumer zadania: " << taskVector[a].NR << endl;
-	//cout << "Zadanie Krytyczne(C):\n" << "\n\tNumer zadania: " << taskVector[c].NR << endl;
+	cout << "Zadanie b:\n" << "\n\tNumer zadania: " << taskVector[b].NR << endl;
+	cout << "Zadanie a:\n" << "\n\tNumer zadania: " << taskVector[a].NR << endl;
+	cout << "Zadanie Krytyczne(C):\n" << "\n\tNumer zadania: " << taskVector[c].NR << endl;
 
 	if (c == -1)
 	{
@@ -154,7 +156,7 @@ int Carlier::find_a(std::vector<RPQ> _tasks, int Cmax)
 			sum = sum + _tasks[i].P;
 		}
 
-		auto BIGSUM = sum + _tasks[a].P + _tasks[b].R;
+		auto BIGSUM = sum + _tasks[b].Q + _tasks[a].R;
 		if (BIGSUM == Cmax)
 			return a;
 	}
