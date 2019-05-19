@@ -10,7 +10,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 {
 	int U;
 	int i = 0;
-	unsigned int R_PERMUTACJI_WYKONANIA_ZADAN_NA_MASZYNIE; //?? by³o u http://new.zsd.iiar.pwr.wroc.pl/files/zadania/CARLIER/AC.pdf
+	//unsigned int R_PERMUTACJI_WYKONANIA_ZADAN_NA_MASZYNIE; //?? by³o u http://new.zsd.iiar.pwr.wroc.pl/files/zadania/CARLIER/AC.pdf
 
 	Schrage schrage;
 	schrage.LoadTasks(taskVector);
@@ -25,27 +25,21 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 		taskVector = schrage.resultOrder;
 	}
 
-	for (auto e : taskVector)
-	{
-		cout << e.NR << " " << e.timeWhenItsFinished << " \n";
-	}
-
 	////////// KROK 3
-	find_b(taskVector, U);
+	find_b(taskVector, schrage.Cmax);
 
 	cout << "Zadanie b: " << b << " o numerze:" << taskVector[b].NR << endl;
-	find_a(taskVector, U);
+	find_a(taskVector, schrage.Cmax);
 
-	//cout << a << endl;
-	c = find_c(taskVector, U);
+	c = find_c(taskVector, schrage.Cmax);
 
 	if (a == b)
-		exit(1);
+		return U; // TMP?
 //	cout << c << endl;
 
 	cout << "Zadanie b:\n" << "\n\tNumer zadania: " << taskVector[b].NR << endl;
 	cout << "Zadanie a:\n" << "\n\tNumer zadania: " << taskVector[a].NR << endl;
-	cout << "Zadanie Krytyczne(C):\n" << "\n\tNumer zadania: " << taskVector[c].NR << endl;
+	// cout << "Zadanie Krytyczne(C):\n" << "\n\tNumer zadania: " << taskVector[c].NR << endl;
 
 	if (c == -1)
 	{
@@ -121,12 +115,12 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 
 int Carlier::find_b(std::vector<RPQ> _tasks, int Cmax)
 {
-	cout << "ZNAJDOWAINE B: \n \n";
+	cout << "ZNAJDOWAINE B: \n ";
 
-	for (auto e : _tasks)
+	/*for (auto e : _tasks)
 	{
 		cout << e.NR << " " << e.timeWhenItsFinished << " \n";
-	}
+	}*/
 	unsigned int i = 0;
 	for (i = 0; i < _tasks.size(); i++)
 	{
@@ -149,14 +143,12 @@ int Carlier::find_a(std::vector<RPQ> _tasks, int Cmax)
 	// cout << "Zatrzymam siê przed zadaniem: " << _tasks[b].NR << endl;  // TMP DEBUG
 	for (a = 0; a < b; a++)
 	{
+		unsigned int BIGSUM = 0;
+		BIGSUM = _tasks[a].R + _tasks[b].Q;
 		unsigned int sum = 0;
-		for (unsigned int i = 0; i <= b; i++)
-		{
-
+		for (unsigned int i = a; i <= b; i++)
 			sum = sum + _tasks[i].P;
-		}
-
-		auto BIGSUM = sum + _tasks[b].Q + _tasks[a].R;
+		BIGSUM = BIGSUM + sum;
 		if (BIGSUM == Cmax)
 			return a;
 	}
