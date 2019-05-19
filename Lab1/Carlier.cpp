@@ -158,9 +158,7 @@ int Carlier::find_a(std::vector<RPQ> _tasks, int Cmax)
 
 int Carlier::find_c(std::vector<RPQ> _tasks, int Cmax)
 {
-	int i = b;
-
-	for (i = b; i >= a; i--)
+	for (int i = b; i >= a; i--)
 	{
 		if (_tasks[i].Q < _tasks[b].Q)
 		{
