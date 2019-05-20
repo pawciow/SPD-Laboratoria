@@ -3,18 +3,19 @@
 
 using namespace std;
 
-Carlier::Carlier() : U(0), UB(INT_MAX), LB(0)
+Carlier::Carlier()
 {}
 
-int Carlier::carlier(vector<RPQ> taskVector)//, int __UB__)
+int Carlier::carlier(vector<RPQ> taskVector, int UB)
 {
 	unsigned int a = 0; // numer pierwszego zadania w bloku K
 	unsigned int b = 0; // numer ostatniego zadania w bloku K
 	unsigned int c = 0; // numer zadania przeszkadzajacêgo, interference job
 
+	int U, LB;
 	//U = __UB__;
 	int i = 0;
-	cout << "\n Na poczatku: " << U << " Wielkoœæ taskvectora: " << taskVector.size()<< endl;
+	cout << "\n Na poczatku: " << UB << " Wielkoœæ taskvectora: " << taskVector.size()<< endl;
 	//unsigned int R_PERMUTACJI_WYKONANIA_ZADAN_NA_MASZYNIE; //?? by³o u http://new.zsd.iiar.pwr.wroc.pl/files/zadania/CARLIER/AC.pdf
 
 	Schrage schrage;
@@ -74,7 +75,7 @@ int Carlier::carlier(vector<RPQ> taskVector)//, int __UB__)
 		cout << "PRZED WEJŒCIEM W PIERWSZEGO IFA: " << U << std::endl;
 
 		taskVector = schragePmtn.resultOrder;
-		UB = carlier(taskVector);
+		UB = carlier(taskVector,UB);
 	}
 
 	// Krok 10
@@ -102,7 +103,7 @@ int Carlier::carlier(vector<RPQ> taskVector)//, int __UB__)
 	{
 		cout << "PRZED WEJŒCIEM W DRUGIEGO IFA: " << U << std::endl;
 		taskVector = schragePmtn2.resultOrder;
-		U = carlier(taskVector);
+		UB = carlier(taskVector,UB);
 	}
 
 
@@ -113,7 +114,7 @@ int Carlier::carlier(vector<RPQ> taskVector)//, int __UB__)
 			e.Q = toRemember_Q;
 	}
 	cout << "Wielkosc taskVectora: " << taskVector.size() << endl;
-	return U;
+	return UB;
 
 }
 
@@ -183,7 +184,7 @@ RPQ Carlier::findH(int c, int b, std::vector<RPQ> taskVector)
 	RpqComparatorByQ by_Q;
 
 	unsigned int TMP1 = 0, TMP2 = 0, sumP = 0;
-	for (unsigned int i = c+1; i < b+1; i++)
+	for (unsigned int i = c+1; i < b+1; i++) // but i guess it should be b, not b+1
 	{
 		sumP = +taskVector[i].P;
 	}

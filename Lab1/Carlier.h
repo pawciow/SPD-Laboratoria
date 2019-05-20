@@ -9,14 +9,14 @@ class Carlier
 public:
 	Carlier();
 	~Carlier();
-	int carlier(std::vector<RPQ> taskVector);//, int __UB__);
+	int carlier(std::vector<RPQ> taskVector, int UB);//, int __UB__);
 
 	void LoadTasks(std::string fileName);
 	std::vector<int> wyniki;
 	std::vector<RPQ> quickFIXVector; //For loading
-	int U; // wartoœæ funkcji celu Cmax
-	int UB; // górne oszacowanie, upper bound
-	int LB; // dolne oszacowanie, lower bound
+	//int U; // wartoœæ funkcji celu Cmax
+	//int UB; // górne oszacowanie, upper bound
+	//int LB; // dolne oszacowanie, lower bound
 	int resultFromMakuchowski;
 
 	int toRemember_R = 0;

@@ -19,7 +19,7 @@ int main()
 		std::cout << "TEST NUMER: " << file << endl;
 		Carlier tmp;
 		tmp.LoadTasks(file);
-		int a = tmp.carlier(tmp.quickFIXVector);//, tmp.UB);
+		int a = tmp.carlier(tmp.quickFIXVector, 9999);//, tmp.UB);
 		cout << "\n najlepszy wynik: " << a;
 		if (tmp.resultFromMakuchowski == a)
 		{
