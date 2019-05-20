@@ -10,8 +10,8 @@ int main()
 	int score = 0;
 	for(int i = 1; i < 10; i++)
 	{
-		if (i == 8)
-			continue; // bo stack overflow
+		//if (i == 8)
+			//continue; // bo stack overflow
 		std::string file= "dane_testowe\\carlier\\";
 		file += std::to_string(i);
 		file += ".txt";
@@ -25,6 +25,10 @@ int main()
 		{
 			score++;
 			std::cout << "\n DOBRZE! \n";
+		}
+		else
+		{
+			std::cout << "\n ZLE! Powinno byc: " << tmp.resultFromMakuchowski << endl;
 		}
 		std::cout << " \n \n \n \n";
 			

@@ -32,40 +32,27 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 	////////// KROK 3
 	b = find_b(taskVector, U);
 	if (b == -1)
+	{
+		std::cerr << " B to minus jeden! taskVector: \n";
+		for (auto e : taskVector)
+			std::cerr << e.NR << " " << e.R << " " << e.P << " " << e.Q << endl;
 		return U; // Tego nie powinno byæ. To zapobiega wywalaniu, ale to jest Ÿle. Trzeba ogarn¹æ sk¹d to jest.
+
+	}
 
 	a = find_a(taskVector, U, b);
 	c = find_c(taskVector, U, a, b);
 
 	if (c == -1)
 	{
-		cout << "END";
+		cout << "END "<< U << "\n";
 		return U;
 	}
 
 	// Krok 5:
-	RpqComparatorByR by_R;
-	RpqComparatorByQ by_Q;
-	unsigned int new_p;
-	for (auto it = taskVector.begin() + c; it <= taskVector.begin() + b; it++)
-	{
-		new_p = +it->P;
-		std::cout << it->R << " " << it->P << " " << it->Q << " \n";
-	}
-	// KUBA TUTAJ COŒ SIÊ DZIEJE NIE TAK
-	// BO JAK ZMIENISZ SOBIE MIN_R I MIN_Q NP NA ODWRÓT, ¯E MINIMUM NA MAKSIMUM
-	// TO I TAK NIC NIE ZMIENIA.
-	// Tutaj zacznij œledztwo
-	/* IM NOT SURE ABOUT BOUNDARIES - I MEAN IF (C+1) OR +B(MAYBE B+1?)*/
-	unsigned int TMP1 = 0, TMP2 = 0, sumP = 0;
-	for (unsigned int i = c + 1; i < b; i++)
-	{
-		sumP = +taskVector[i].P;
-	}
-	TMP1 = max_element(taskVector.begin(), taskVector.end(), by_R)->R;
-	TMP2 = min_element(taskVector.begin(), taskVector.end(), by_Q)->Q;
-	RPQ temporary(TMP1, sumP, TMP2, 1234);
-	cout << "min_r " << temporary.R << "suma p " << temporary.P << "min_Q " << temporary.Q;
+
+	RPQ temporary = findH(c, b, taskVector);
+	cout << "min_r " << temporary.R << "suma p " << temporary.P << "min_Q " << temporary.Q << endl;
 
 	// Krok 6
 	if (toRemember_R == -1)
@@ -73,8 +60,8 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 		toRembember_NR = taskVector[c].NR;
 		toRemember_R = taskVector[c].R;
 	}
+	taskVector[c].R = max({ taskVector[c].R, temporary.R + temporary.P });
 
-	taskVector[c].R = max({ taskVector[c].R, temporary.R + temporary.P }); //TO zmieni³em i zaczê³o siê zapêtlaæ
 	// Krok 7
 	schragePmtn.LoadTasks(taskVector);
 	LB = schragePmtn();
@@ -82,7 +69,9 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 	// Krok 8
 	if (LB < UB)
 	{
-		UB = carlier(taskVector, U); // Krok 9
+		cout << "PRZED WEJŒCIEM W PIERWSZEGO IFA: " << U << std::endl;
+		taskVector = schragePmtn.resultOrder;
+		U = carlier(taskVector, U); // Krok 9
 	}
 	// Krok 10
 	for (auto & e : taskVector)
@@ -95,19 +84,24 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 	if (toRemember_P = -1)
 	{
 		toRembember_NR = taskVector[c].NR;
-		toRemember_P = taskVector[c].R;
+		toRemember_P = taskVector[c].P;
 	}
+
+
+	temporary = findH(c, b, taskVector);
 	taskVector[c].Q = max({ taskVector[c].Q, temporary.Q + temporary.P });
 	// Krok 12
-	schragePmtn.LoadTasks(taskVector);
-	LB = schragePmtn();
+	SchragePmtn schragePmtn2;
+	schragePmtn2.LoadTasks(taskVector);
+	LB = schragePmtn2();
 
 	// Krok 13
-	if (LB < UB) /* Np tutaj rzadko wchodzimy*/
+	if (LB < UB)
 	{
-		UB = carlier(taskVector, U); // Krok 14
+		cout << "PRZED WEJŒCIEM W DRUGIEGO IFA: " << U << std::endl;
+		taskVector = schragePmtn2.resultOrder;
+		U = carlier(taskVector, UB); // Krok 14
 	}
-
 
 	// Krok 15
 	for (auto & e : taskVector)
@@ -115,7 +109,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int __UB__)
 		if (e.NR == toRembember_NR)
 			e.P = toRemember_P;
 	}
-	toRemember_R = -1;
+	toRemember_P = -1;
 	return U;
 
 }
@@ -178,4 +172,21 @@ void Carlier::LoadTasks(std::string fileName)
 		quickFIXVector.push_back({ r,p,q,i + 1 });
 	}
 	fileStream.close();
+}
+
+RPQ Carlier::findH(int c, int b, std::vector<RPQ> taskVector)
+{
+	RpqComparatorByR by_R;
+	RpqComparatorByQ by_Q;
+
+	unsigned int TMP1 = 0, TMP2 = 0, sumP = 0;
+	for (unsigned int i = c + 1; i < b + 1; i++)
+	{
+		sumP = +taskVector[i].P;
+	}
+	TMP1 = min_element(taskVector.begin() + c + 1, taskVector.begin() + b, by_R)->R;
+	TMP2 = max_element(taskVector.begin() + c + 1, taskVector.begin() + b, by_Q)->Q;
+
+	return {TMP1, sumP, TMP2, 987};
+
 }
