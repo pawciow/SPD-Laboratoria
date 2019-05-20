@@ -9,7 +9,7 @@ class Carlier
 public:
 	Carlier();
 	~Carlier();
-	int carlier(std::vector<RPQ> taskVector, int __UB__);
+	int carlier(std::vector<RPQ> taskVector);//, int __UB__);
 
 	void LoadTasks(std::string fileName);
 	std::vector<int> wyniki;
@@ -19,9 +19,9 @@ public:
 	int LB; // dolne oszacowanie, lower bound
 	int resultFromMakuchowski;
 
-	int toRemember_R = -1;
+	int toRemember_R = 0;
 	unsigned int toRembember_NR = 0;
-	int toRemember_P = -1;
+	int toRemember_Q = 0;
 private:
 
 	int find_a(std::vector<RPQ> _tasks, int Cmax, int b);
