@@ -12,7 +12,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	unsigned int b = 0; // numer ostatniego zadania w bloku K
 	unsigned int c = 0; // numer zadania przeszkadzajacêgo, interference job
 
-	int U, LB;
+	unsigned int U, LB;
 	//U = __UB__;
 	int i = 0;
 	cout << "\n Na poczatku: " << UB << " Wielkoœæ taskvectora: " << taskVector.size()<< endl;
@@ -34,8 +34,8 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	b = find_b(taskVector, U);
 	if (b == -1)
 	{
-		std::cerr << " B to minus jeden! taskVector: \n";
-		return U; // Tego nie powinno byæ. To zapobiega wywalaniu, ale to jest Ÿle. Trzeba ogarn¹æ sk¹d to jest.
+		//std::cerr << " B to minus jeden! Zwracam:" << u;
+		return UB; // Tego nie powinno byæ. To zapobiega wywalaniu, ale to jest Ÿle. Trzeba ogarn¹æ sk¹d to jest.
 
 	}
 
@@ -54,56 +54,67 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	cout << "min_r " << temporary.R << "suma p " << temporary.P << "min_Q " << temporary.Q << endl;
 
 	// Krok 6
-	 //if (toRemember_R == -1)
+	 if (toRemember_R == -1)
 	{
 		toRembember_NR = taskVector[c].NR;
 		toRemember_R = taskVector[c].R;
 	}
 	taskVector[c].R = max({ taskVector[c].R, temporary.R + temporary.P });
 
+	RPQ temp2 = findH(c - 1, b, taskVector);
+
 	// Krok 7
 	SchragePmtn schragePmtn;
 	schragePmtn.LoadTasks(taskVector);
 	LB = schragePmtn();
+	LB = std::max({ LB, 
+		temporary.R+temporary.P+temporary.Q,
+		temp2.R+taskVector[c].R, temp2.P+taskVector[c].P, temp2.Q+taskVector[c].Q
+	});
 
 	// Krok 8
 	if (LB < UB)
 	{
-		cout << "Wielkosc taskVectora: " << taskVector.size() << endl;
-		cout << "Wielkosc schragePmtn vectora: " << schragePmtn.resultOrder.size() << endl;
+		cout << "Left child: " << U << std::endl;
+		//UB = LB;
+		UB = carlier(taskVector, LB);
+	}
+	else
+	{
+		cout << "\nzmieniam\n";
 
-		cout << "PRZED WEJŒCIEM W PIERWSZEGO IFA: " << U << std::endl;
-
-		taskVector = schragePmtn.resultOrder;
-		UB = carlier(taskVector,UB);
 	}
 
+	
 	// Krok 10
 	for (auto & e : taskVector)
 	{
 		if (e.NR == toRembember_NR)
 			e.R = toRemember_R;
 	}
-
+	toRemember_R = -1;
 	// Krok 11
-
-	toRembember_NR = taskVector[c].NR;
-	toRemember_Q = taskVector[c].Q;
-
-
-	temporary = findH(c, b, taskVector);
+	if (toRemember_Q == -1)
+	{
+		toRembember_NR = taskVector[c].NR;
+		toRemember_Q = taskVector[c].Q;
+	}
 	taskVector[c].Q = max({ taskVector[c].Q, temporary.Q + temporary.P });
 	// Krok 12
 	SchragePmtn schragePmtn2;
 	schragePmtn2.LoadTasks(taskVector);
 	LB = schragePmtn2();
-
+	LB = std::max({ LB,
+	temporary.R + temporary.P + temporary.Q,
+	temp2.R + taskVector[c].R, temp2.P + taskVector[c].P, temp2.Q + taskVector[c].Q
+		});
+	//LB = std::max({ LB, temporary.Q + temporary.P + temporary.R, temp2.R + temp2.P, temp2.Q });
 	// Krok 13
 	if (LB < UB)
 	{
-		cout << "PRZED WEJŒCIEM W DRUGIEGO IFA: " << U << std::endl;
-		taskVector = schragePmtn2.resultOrder;
-		UB = carlier(taskVector,UB);
+		cout << "Right child: " << U << std::endl;
+		//UB = LB;
+		UB = carlier(taskVector, LB);
 	}
 
 
@@ -113,7 +124,8 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 		if (e.NR == toRembember_NR)
 			e.Q = toRemember_Q;
 	}
-	cout << "Wielkosc taskVectora: " << taskVector.size() << endl;
+	toRemember_Q = -1;
+
 	return UB;
 
 }
@@ -184,12 +196,12 @@ RPQ Carlier::findH(int c, int b, std::vector<RPQ> taskVector)
 	RpqComparatorByQ by_Q;
 
 	unsigned int TMP1 = 0, TMP2 = 0, sumP = 0;
-	for (unsigned int i = c+1; i < b+1; i++) // but i guess it should be b, not b+1
+	for (unsigned int i = c; i <= b; i++) // but i guess it should be b, not b+1
 	{
-		sumP = +taskVector[i].P;
+		sumP =+ taskVector[i].P;
 	}
-	TMP1 = max_element(taskVector.begin() + (c+1), taskVector.begin() + b+1, by_R)->R; // Hax because min_element() gives  the biggest because of comparator
-	TMP2 = min_element(taskVector.begin() + (c+1), taskVector.begin() + b+1, by_Q)->Q;
+	TMP1 = max_element(taskVector.begin() + (c), taskVector.begin() + b+1, by_R)->R; // Hax because min_element() gives  the biggest because of comparator
+	TMP2 = min_element(taskVector.begin() + (c), taskVector.begin() + b+1, by_Q)->Q;
 
 	return {TMP1, sumP, TMP2, 987};
 
