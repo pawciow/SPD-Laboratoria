@@ -72,69 +72,54 @@ SchragePmtn::SchragePmtn()
 
 int SchragePmtn::operator() ()
 {
-	unsigned int time{};
-	unsigned int i{};
-	unsigned int tmpCmax{ 0 };
-
+	RPQ currentTask = { 0, 0, 0, 0 };
+	RPQ tmp;
 	std::vector<RPQ> order;
-	std::list<RPQ> interrupts;
-
+	int i = 0;
+	int time = notOrderedTask.top().R;
+	Cmax = 0;
+	
 	while (!orderedTask.empty() || !notOrderedTask.empty())
 	{
-		while (!notOrderedTask.empty() && notOrderedTask.top().R <= time)
+		while (!notOrderedTask.empty() && (notOrderedTask.top().R <= time))
 		{
-			orderedTask.push(notOrderedTask.top());
+			tmp = notOrderedTask.top();
+			orderedTask.push(tmp);
+			order.push_back(tmp);
 			notOrderedTask.pop();
 
+			
+			if (tmp.Q > currentTask.Q)
+			{
+				
+				currentTask.P = time - tmp.R;
+				time = tmp.R;
+				if (currentTask.P > 0)
+				{
+					orderedTask.push(currentTask);
+					order.push_back(currentTask);
+					
+				}		
+			}
+			order.back().timeWhenItsFinished = time; // FOR CARLIER // Nie wiem gdzie to wsadzić -,- jutro ogarnę
 		}
-
 		if (orderedTask.empty())
 		{
 			time = notOrderedTask.top().R;
 		}
 		else
 		{
-			while (!interrupts.empty())
-				interrupts.pop_back();
-
-			for (int i = 0; i < notOrderedTask.size; i++)
-				if ((orderedTask.top().P + time > notOrderedTask.top().R) && (orderedTask.top().Q < notOrderedTask.top().Q))
-					interrupts.push_back(notOrderedTask.top());
-
-			if (interrupts.empty())
-			{
-				order.push_back(orderedTask.top());
-				orderedTask.pop();
-				time += order.back().P;
-
-				if (time + order.back().Q > tmpCmax)
-					tmpCmax = time + order.back().Q;
-			}
-
-			else
-			{
-				RPQ part1 = orderedTask.top();
-				orderedTask.pop();
-				RPQ part2 = part1;
-
-				part1.P = interrupts.back().R - time;
-				part2.P -= part1.P;
-				orderedTask.push(part2);
-
-				order.push_back(part1);
-
-				order.back().timeWhenItsFinished = time; // FOR CARLIER
-
-				time += order.back().P;
-
-				if (time + order.back().Q > tmpCmax)
-					tmpCmax = time + order.back().Q;
-			}
+			tmp = orderedTask.top();
+			orderedTask.pop();
+			order.pop_back();
+			currentTask = tmp;
+			
+			time = time + tmp.P;
+			Cmax = (Cmax > (time + tmp.Q)) ? Cmax : (time + tmp.Q);
 		}
 	}
-	std::cout << tmpCmax << std::endl;
-	Cmax = tmpCmax;
-	resultOrder = order;
+	
+	std::cout << Cmax << std::endl;
 	return Cmax;
 }
 
