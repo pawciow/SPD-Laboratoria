@@ -73,9 +73,12 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	SchragePmtn schragePmtn;
 	schragePmtn.LoadTasks(taskVector);
 	LB = schragePmtn();
+	auto sum3 = temp2.R + temp2.P + temp2.Q ;
+
+	cout << "LB: " << LB << " H{K}: " << (temporary.R + temporary.P + temporary.Q) << "H(K u {C}): " << sum3 << endl;
 	LB = std::max({ LB, 
 		temporary.R+temporary.P+temporary.Q,
-		temp2.R+toRemember_R, temp2.P+taskVector[c].P, temp2.Q+taskVector[c].Q //  moze byc taskVector[c].R
+		sum3//  moze byc taskVector[c].R
 	});
 
 	// Krok 8
@@ -107,9 +110,11 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	SchragePmtn schragePmtn2;
 	schragePmtn2.LoadTasks(taskVector);
 	LB = schragePmtn2();
+	sum3 = (temp2.R + temp2.P + temp2.Q);
+	cout << "LB: " << LB << " H{K}: " << (temporary.R + temporary.P + temporary.Q) << "H(K u {C}): " << sum3 << endl;
 	LB = max({ LB,
 	temporary.R + temporary.P + temporary.Q,
-	temp2.R + taskVector[c].R, temp2.P + taskVector[c].P, temp2.Q + toRemember_Q // Pamietac ze moze byc taskVector[c].Q
+	 // Pamietac ze moze byc taskVector[c].Q
 		});
 
 	// Krok 13
