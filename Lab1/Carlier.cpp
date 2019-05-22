@@ -15,7 +15,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	unsigned int U, LB;
 	//U = __UB__;
 	int i = 0;
-	cout << "\n Na poczatku: " << UB << " Wielkoœæ taskvectora: " << taskVector.size()<< endl;
+	cout << "\n	       Na poczatku: " << UB << endl;
 	//unsigned int R_PERMUTACJI_WYKONANIA_ZADAN_NA_MASZYNIE; //?? by³o u http://new.zsd.iiar.pwr.wroc.pl/files/zadania/CARLIER/AC.pdf
 
 	Schrage schrage;
@@ -24,17 +24,17 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	////////// KROK 2
 	if (U < UB)
 	{
-		cout << "Wielkosc taskVectora: " << taskVector.size() << endl;
-		cout << "Wielkosc schrage vectora: " << schrage.resultOrder.size() << endl;
+		cout << "Zmieniam " << UB << " na " << U << endl;
 		UB = U;
 		taskVector = schrage.resultOrder;
 	}
+
 
 	////////// KROK 3
 	b = find_b(taskVector, U);
 	if (b == -1)
 	{
-		//std::cerr << " B to minus jeden! Zwracam:" << u;
+		std::cerr << "   B to minus jeden! Zwracam:" << UB;
 		return UB; // Tego nie powinno byæ. To zapobiega wywalaniu, ale to jest Ÿle. Trzeba ogarn¹æ sk¹d to jest.
 
 	}
@@ -51,14 +51,12 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	// Krok 5:
 
 	RPQ temporary = findH(c, b, taskVector);
-	cout << "min_r " << temporary.R << "suma p " << temporary.P << "min_Q " << temporary.Q << endl;
+	//cout << "min_r " << temporary.R << "suma p " << temporary.P << "min_Q " << temporary.Q << endl;
 
 	// Krok 6
-	 if (toRemember_R == -1)
-	{
-		toRembember_NR = taskVector[c].NR;
-		toRemember_R = taskVector[c].R;
-	}
+	toRembember_NR = taskVector[c].NR;
+	toRemember_R = taskVector[c].R;
+	
 	taskVector[c].R = max({ taskVector[c].R, temporary.R + temporary.P });
 
 	RPQ temp2 = findH(c - 1, b, taskVector);
@@ -69,22 +67,16 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	LB = schragePmtn();
 	LB = std::max({ LB, 
 		temporary.R+temporary.P+temporary.Q,
-		temp2.R+taskVector[c].R, temp2.P+taskVector[c].P, temp2.Q+taskVector[c].Q
+		temp2.R+toRemember_R, temp2.P+taskVector[c].P, temp2.Q+taskVector[c].Q //  moze byc taskVector[c].R
 	});
 
 	// Krok 8
 	if (LB < UB)
 	{
-		cout << "Left child: " << U << std::endl;
-		//UB = LB;
+		cout << "Left child enters with: " << LB << std::endl;
 		UB = carlier(taskVector, LB);
+		cout << "And Left child returns with: " << UB << endl;
 	}
-	else
-	{
-		cout << "\nzmieniam\n";
-
-	}
-
 	
 	// Krok 10
 	for (auto & e : taskVector)
@@ -93,28 +85,27 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 			e.R = toRemember_R;
 	}
 	toRemember_R = -1;
-	// Krok 11
-	if (toRemember_Q == -1)
-	{
-		toRembember_NR = taskVector[c].NR;
-		toRemember_Q = taskVector[c].Q;
-	}
+
+	// Krok 11	
+	toRembember_NR = taskVector[c].NR;
+	toRemember_Q = taskVector[c].Q;
 	taskVector[c].Q = max({ taskVector[c].Q, temporary.Q + temporary.P });
 	// Krok 12
 	SchragePmtn schragePmtn2;
 	schragePmtn2.LoadTasks(taskVector);
 	LB = schragePmtn2();
-	LB = std::max({ LB,
+	LB = max({ LB,
 	temporary.R + temporary.P + temporary.Q,
-	temp2.R + taskVector[c].R, temp2.P + taskVector[c].P, temp2.Q + taskVector[c].Q
+	temp2.R + taskVector[c].R, temp2.P + taskVector[c].P, temp2.Q + toRemember_Q // Pamietac ze moze byc taskVector[c].Q
 		});
-	//LB = std::max({ LB, temporary.Q + temporary.P + temporary.R, temp2.R + temp2.P, temp2.Q });
+
 	// Krok 13
 	if (LB < UB)
 	{
-		cout << "Right child: " << U << std::endl;
+		cout << "Right child enters with: " << LB << std::endl;
 		//UB = LB;
 		UB = carlier(taskVector, LB);
+		cout << "And Right child returns with: " << UB << endl;
 	}
 
 
