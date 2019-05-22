@@ -45,6 +45,7 @@ void calculateInstanceFromLecture()
 }
 int main()
 {
+	//calculateInstanceFromLecture();
 	calculateTestInstantions();
 	return 0;
 }

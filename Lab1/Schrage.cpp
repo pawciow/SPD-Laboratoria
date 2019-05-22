@@ -56,7 +56,7 @@ int Schrage::operator() ()
 		}
 
 	}
-	std::cout << tmpCmax << std::endl;
+	std::cout << "Schrage: "<< tmpCmax << std::endl;
 	Cmax = tmpCmax;
 	resultOrder = order;
 	return Cmax;
@@ -119,7 +119,7 @@ int SchragePmtn::operator() ()
 		}
 	}
 	
-	std::cout << Cmax << std::endl;
+	std::cout <<"Schrage pmtn:"  << Cmax << std::endl;
 	return Cmax;
 }
 
