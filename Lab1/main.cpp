@@ -5,12 +5,15 @@
 #include <ctime>
 #include <string>
 
-int main()
+void calculateTestInstantions()
 {
+
 	int score = 0;
-	for(int i = 1; i < 10; i++)
+	for (int i = 1; i < 10; i++)
 	{
-		std::string file= "dane_testowe\\carlier\\";
+		if(i == 3)
+			continue;
+		std::string file = "dane_testowe\\carlier\\";
 		file += std::to_string(i);
 		file += ".txt";
 
@@ -18,7 +21,7 @@ int main()
 		Carlier tmp;
 		tmp.LoadTasks(file);
 		int a = tmp.carlier(tmp.quickFIXVector, 9999);//, tmp.UB);
-		cout << "\n najlepszy wynik: " << a;
+		std::cout << "\n najlepszy wynik: " << a;
 		if (tmp.resultFromMakuchowski == a)
 		{
 			score++;
@@ -29,9 +32,20 @@ int main()
 			std::cout << "\n ZLE! Powinno byc: " << tmp.resultFromMakuchowski << endl;
 		}
 		std::cout << " \n \n \n \n";
-			
+
 	}
-	cout << "by³o dobrze: " << score;
+	std::cout << "by³o dobrze: " << score;
+}
+void calculateInstanceFromLecture()
+{
+	Carlier tmp;
+	tmp.LoadTasks("dane_testowe\\makuch_wyklad.txt");
+	int a = tmp.carlier(tmp.quickFIXVector, 9999);
+	std::cout << "\n Wynik: " << a;
+}
+int main()
+{
+	calculateTestInstantions();
 	return 0;
 }
 

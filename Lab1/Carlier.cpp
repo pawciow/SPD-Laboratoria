@@ -40,6 +40,11 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	}
 
 	a = find_a(taskVector, U, b);
+	if (a == -1)
+	{
+		std::cerr << " A to minus jeden! Zwracam: " << UB << endl;
+		return UB;
+	}
 	c = find_c(taskVector, U, a, b);
 
 	if (c == -1)
@@ -48,10 +53,13 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 		return U;
 	}
 
+	cout << "A numer: " << taskVector[a].NR << " B numer: " << taskVector[b].NR << " C numer: " << taskVector[c].NR << endl;
+	cout << "A: " << a<< " B: " << b<< "C: " << c << endl;
 	// Krok 5:
 
 	RPQ temporary = findH(c, b, taskVector);
-	//cout << "min_r " << temporary.R << "suma p " << temporary.P << "min_Q " << temporary.Q << endl;
+	cout << "BLOK K" << endl;
+	cout << "min_r " << temporary.R << "suma p " << temporary.P << "min_Q " << temporary.Q << endl;
 
 	// Krok 6
 	toRembember_NR = taskVector[c].NR;
@@ -73,9 +81,13 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	// Krok 8
 	if (LB < UB)
 	{
-		cout << "Left child enters with: " << LB << std::endl;
-		UB = carlier(taskVector, LB);
+		cout << "Left child enters with: " << UB << std::endl;
+		UB = carlier(taskVector, UB);
 		cout << "And Left child returns with: " << UB << endl;
+	}
+	else
+	{
+		cout << "Left child has ended with: " << UB << endl;
 	}
 	
 	// Krok 10
@@ -102,10 +114,14 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	// Krok 13
 	if (LB < UB)
 	{
-		cout << "Right child enters with: " << LB << std::endl;
+		cout << "Right child enters with: " << UB << std::endl;
 		//UB = LB;
-		UB = carlier(taskVector, LB);
+		UB = carlier(taskVector, UB);
 		cout << "And Right child returns with: " << UB << endl;
+	}
+	else
+	{
+		cout << "Right child has ended \n";
 	}
 
 
@@ -127,7 +143,7 @@ int Carlier::find_b(std::vector<RPQ> _tasks, int Cmax)
 {
 
 	unsigned int i = 0;
-	for (i = 0; i < _tasks.size(); i++)
+	for (i = _tasks.size()-1; i > 0 ; i--)
 		if (Cmax == _tasks[i].timeWhenItsFinished + _tasks[i].Q)
 			return i;
 	
@@ -136,7 +152,7 @@ int Carlier::find_b(std::vector<RPQ> _tasks, int Cmax)
 
 int Carlier::find_a(std::vector<RPQ> _tasks, int Cmax, int b)
 {
-	for (unsigned int a = 0; a < b; a++)
+	for (unsigned int a = 0; a <= b; a++)
 	{
 
 		unsigned int sum = 0;
@@ -187,12 +203,12 @@ RPQ Carlier::findH(int c, int b, std::vector<RPQ> taskVector)
 	RpqComparatorByQ by_Q;
 
 	unsigned int TMP1 = 0, TMP2 = 0, sumP = 0;
-	for (unsigned int i = c; i <= b; i++) // but i guess it should be b, not b+1
+	for (unsigned int i = c+1; i <= b; i++)
 	{
-		sumP =+ taskVector[i].P;
+		sumP = sumP + taskVector[i].P;
 	}
-	TMP1 = max_element(taskVector.begin() + (c), taskVector.begin() + b+1, by_R)->R; // Hax because min_element() gives  the biggest because of comparator
-	TMP2 = min_element(taskVector.begin() + (c), taskVector.begin() + b+1, by_Q)->Q;
+	TMP1 = max_element(taskVector.begin() + (c+1), taskVector.begin() + b+1, by_R)->R; // Hax because min_element() gives  the biggest because of comparator
+	TMP2 = min_element(taskVector.begin() + (c+1), taskVector.begin() + b+1, by_Q)->Q;
 
 	return {TMP1, sumP, TMP2, 987};
 
