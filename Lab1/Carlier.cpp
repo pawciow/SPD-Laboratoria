@@ -86,11 +86,11 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	{
 		cout << "Left child enters with: " << UB << std::endl;
 		UB = carlier(taskVector, UB);
-		cout << "And Left child returns with: " << UB << endl;
+		cout << "And Left child returns with: " << UB << endl << endl;
 	}
 	else
 	{
-		cout << "Left child has ended with: " << UB << endl;
+		cout << "No left child " << UB << endl;
 	}
 	
 	// Krok 10
@@ -106,6 +106,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	toRemember_Q = taskVector[c].Q;
 	taskVector[c].Q = max({ taskVector[c].Q, temporary.Q + temporary.P });
 	cout << "New Q: " << taskVector[c].Q << endl;
+	//temp2 = findH(c, b, taskVector);
 	// Krok 12
 	SchragePmtn schragePmtn2;
 	schragePmtn2.LoadTasks(taskVector);
@@ -114,6 +115,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	cout << "LB: " << LB << " H{K}: " << (temporary.R + temporary.P + temporary.Q) << "H(K u {C}): " << sum3 << endl;
 	LB = max({ LB,
 	temporary.R + temporary.P + temporary.Q,
+		sum3
 	 // Pamietac ze moze byc taskVector[c].Q
 		});
 
@@ -127,7 +129,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	}
 	else
 	{
-		cout << "Right child has ended \n";
+		cout << "No right child \n";
 	}
 
 
