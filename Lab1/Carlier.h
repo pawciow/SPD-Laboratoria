@@ -14,14 +14,10 @@ public:
 	void LoadTasks(std::string fileName);
 	std::vector<int> wyniki;
 	std::vector<RPQ> quickFIXVector; //For loading
-	//int U; // wartoœæ funkcji celu Cmax
-	//int UB; // górne oszacowanie, upper bound
-	//int LB; // dolne oszacowanie, lower bound
+
 	int resultFromMakuchowski;
 
-	int toRemember_R = -1;
-	unsigned int toRembember_NR = 0;
-	int toRemember_Q = -1;
+
 private:
 
 	int find_a(std::vector<RPQ> _tasks, int Cmax, int b);

@@ -11,7 +11,9 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	unsigned int a = 0; // numer pierwszego zadania w bloku K
 	unsigned int b = 0; // numer ostatniego zadania w bloku K
 	unsigned int c = 0; // numer zadania przeszkadzajacêgo, interference job
-
+	unsigned int toRemember_R{};
+	unsigned int toRembember_NR{};
+	unsigned int toRemember_Q{};
 	unsigned int U, LB;
 	//U = __UB__;
 	int i = 0;
