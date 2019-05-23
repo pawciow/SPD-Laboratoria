@@ -80,22 +80,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 		temp2.width()
 		});
 
-	//Testy eliminacyjne
-	std::vector<RPQ> L;
-	for (auto & e : taskVector)
-	{
-		if (e.P > UB - (temporary.R + temporary.P + temporary.Q))
-			L.push_back(e);
-	}
-
-	for (auto & e : L)
-	{
-		if ((e.R + e.P + temporary.P + temporary.Q) >= UB)
-			e.R = max({ e.R, temporary.R + temporary.P });
-		if ((temporary.R + e.P + temporary.P + e.Q) >= UB)
-			e.Q = max({ e.Q, temporary.Q + temporary.P });
-	}
-	L.clear();
+	eliminationTest(temporary, UB, c, b, taskVector);
 
 	// Krok 8
 	if (LB < UB)
@@ -138,21 +123,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 		temp2.width()
 		});
 
-	//Testy eliminacyjne
-	for (auto & e : taskVector)
-	{
-		if (e.P > UB - (temporary.R + temporary.P + temporary.Q))
-			L.push_back(e);
-	}
-
-	for (auto & e : L)
-	{
-		if ((e.R + e.P + temporary.P + temporary.Q) >= UB)
-			e.R = max({ e.R, temporary.R + temporary.P });
-		if ((temporary.R + e.P + temporary.P + e.Q) >= UB)
-			e.Q = max({ e.Q, temporary.Q + temporary.P });
-	}
-	L.clear();
+	eliminationTest(temporary, UB, c, b, taskVector);
 
 	// Krok 13
 	if (LB < UB)
@@ -260,4 +231,33 @@ RPQ Carlier::findH(int c, int b, std::vector<RPQ> taskVector)
 	cout << endl;
 	return { TMP1, sumP, TMP2, 987 };
 
+}
+
+void Carlier::eliminationTest(RPQ temporary, int UB, int c, int b, std::vector<RPQ> taskVector)
+{
+	std::vector<RPQ> L;
+	for (int i = 0; i < taskVector.size(); i++)
+	{
+		if ((taskVector.begin() + i >= taskVector.begin() + c + 1) &&
+			(taskVector.begin() + i <= taskVector.begin() + b) &&
+			(taskVector[i].P > (UB - (temporary.R + temporary.P + temporary.Q))))
+			L.push_back(taskVector[i]);
+	}
+
+	for (auto & e : L)
+	{
+		if ((e.R + e.P + temporary.P + temporary.Q) >= UB)
+		{
+			cout << "Test Eliminacyjny zmiana Ri = " << e.R << " na: Ri = ";
+			e.R = max({ e.R, temporary.R + temporary.P });
+			cout << e.R << endl;
+		}
+			
+		if ((temporary.R + e.P + temporary.P + e.Q) >= UB)
+		{
+			cout << "Test Eliminacyjny zmiana Qi = " << e.Q << " na: Qi = ";
+			e.Q = max({ e.Q, temporary.Q + temporary.P });
+			cout << e.Q << endl;
+		}
+	}
 }
