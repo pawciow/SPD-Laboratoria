@@ -11,8 +11,8 @@ void Schrage::LoadTasks(std::string filename)
 	for (unsigned int i = 0; i < size; i++)
 	{
 		fileStream >> r >> p >> q;
-		notOrderedTask.push({ r,p,q,i+1 });
-		tasksVector.push_back({ r,p,q,i+1 });
+		notOrderedTask.push({ r,p,q,i + 1 });
+		tasksVector.push_back({ r,p,q,i + 1 });
 	}
 	fileStream.close();
 	resultFromMakuchowski = a;
@@ -57,7 +57,7 @@ int Schrage::operator() ()
 		}
 
 	}
-	std::cout << "Schrage: "<< tmpCmax << std::endl;
+	std::cout << "Schrage: " << tmpCmax << std::endl;
 	Cmax = tmpCmax;
 	resultOrder = order;
 	return Cmax;
@@ -79,7 +79,7 @@ int SchragePmtn::operator() ()
 	int i = 0;
 	int time = notOrderedTask.top().R;
 	Cmax = 0;
-	
+
 	while (!orderedTask.empty() || !notOrderedTask.empty())
 	{
 		while (!notOrderedTask.empty() && (notOrderedTask.top().R <= time))
@@ -89,20 +89,20 @@ int SchragePmtn::operator() ()
 			order.push_back(tmp);
 			notOrderedTask.pop();
 
-			
+
 			if (tmp.Q > currentTask.Q)
 			{
-				
+
 				currentTask.P = time - tmp.R;
 				time = tmp.R;
 				if (currentTask.P > 0)
 				{
 					orderedTask.push(currentTask);
 					order.push_back(currentTask);
-					
-				}		
+
+				}
 			}
-			order.back().timeWhenItsFinished = time; // FOR CARLIER // Nie wiem gdzie to wsadzić -,- jutro ogarnę
+
 		}
 		if (orderedTask.empty())
 		{
@@ -114,13 +114,13 @@ int SchragePmtn::operator() ()
 			orderedTask.pop();
 			order.pop_back();
 			currentTask = tmp;
-			
+
 			time = time + tmp.P;
 			Cmax = (Cmax > (time + tmp.Q)) ? Cmax : (time + tmp.Q);
 		}
 	}
-	
-	std::cout <<"Schrage pmtn:"  << Cmax << std::endl;
+
+	std::cout << "Schrage pmtn:" << Cmax << std::endl;
 	return Cmax;
 }
 
