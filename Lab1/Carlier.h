@@ -25,5 +25,7 @@ private:
 	int find_c(std::vector<RPQ> _tasks, int Cmax, int a, int b);
 	RPQ findH(int a, int b, std::vector<RPQ> taskVector);
 
+	void testyEliminacyjne(int a, int b, std::vector<RPQ> taskVector, RPQ k, int UB);
+
 	
 };

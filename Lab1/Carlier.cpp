@@ -36,7 +36,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	if (b == -1)
 	{
 		std::cerr << "   B to minus jeden! Zwracam:" << UB;
-		return UB; // Tego nie powinno byæ. To zapobiega wywalaniu, ale to jest Ÿle. Trzeba ogarn¹æ sk¹d to jest.
+		return UB; // Tego nie powinno byc. To zapobiega wywalaniu, ale to jest zle. Trzeba ogarn¹æ sk¹d to jest.
 
 	}
 
@@ -81,22 +81,8 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 		});
 
 	//Testy eliminacyjne
-	std::vector<RPQ> L;
-	for (auto & e : taskVector)
-	{
-		if (e.P > UB - (temporary.R + temporary.P + temporary.Q))
-			L.push_back(e);
-	}
-
-	for (auto & e : L)
-	{
-		if ((e.R + e.P + temporary.P + temporary.Q) >= UB)
-			e.R = max({ e.R, temporary.R + temporary.P });
-		if ((temporary.R + e.P + temporary.P + e.Q) >= UB)
-			e.Q = max({ e.Q, temporary.Q + temporary.P });
-	}
-	L.clear();
-
+	testyEliminacyjne(a, b, taskVector, temporary, UB);
+	/******************************* ZOBACZYĆ CZY TO TUTAJ       *************************************/
 	// Krok 8
 	if (LB < UB)
 	{
@@ -132,27 +118,17 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	temp2 = findH(c - 1, b, taskVector);
 
 	cout << "LB: " << LB << " H{K}: " << temporary.width() << "H(K u {C}): " << temp2.width() << endl;
+
+	//Testy eliminacyjne
+	testyEliminacyjne(a, b, taskVector, temporary, UB);
+	/******************************* ZOBACZYĆ CZY TO TUTAJ       *************************************/
 	LB = max({
 		LB,
 		temporary.width(),
 		temp2.width()
 		});
 
-	//Testy eliminacyjne
-	for (auto & e : taskVector)
-	{
-		if (e.P > UB - (temporary.R + temporary.P + temporary.Q))
-			L.push_back(e);
-	}
 
-	for (auto & e : L)
-	{
-		if ((e.R + e.P + temporary.P + temporary.Q) >= UB)
-			e.R = max({ e.R, temporary.R + temporary.P });
-		if ((temporary.R + e.P + temporary.P + e.Q) >= UB)
-			e.Q = max({ e.Q, temporary.Q + temporary.P });
-	}
-	L.clear();
 
 	// Krok 13
 	if (LB < UB)
@@ -261,3 +237,47 @@ RPQ Carlier::findH(int c, int b, std::vector<RPQ> taskVector)
 	return { TMP1, sumP, TMP2, 987 };
 
 }
+
+void Carlier::testyEliminacyjne(int a, int b, std::vector<RPQ> taskVector, RPQ k, int UB)
+{
+	cout << "\n\n	TESTY ELIMINACYJNE \n" ;
+	vector<int>  L;
+	/*for (unsigned int i = 0; i < a; i++)
+	{
+		cout << "Sprawdzam : " << i << " ";
+		if (taskVector[i].P > UB - k.width())
+			L.push_back(i);
+	}
+	for (unsigned int i = b; i < taskVector.size(); i++)
+	{
+		cout << i << " ";
+		if (taskVector[i].P > UB - k.width())
+			L.push_back(i);
+	}*/
+	/*
+	cout << "Sprawdzam : "; 
+	for (int i = 0; i < taskVector.size(); i++)
+	{
+		cout << i << " ";
+		if (taskVector[i].P > UB - k.width())
+			L.push_back(i);
+	}
+
+	for(auto & e : L)
+		cout << "\n Znaleziono: " << e << " ";
+	*/
+	for (auto & e : L)
+	{
+		if ((taskVector[e].R + taskVector[e].P + k.P + taskVector[b].Q) >= UB)
+		{
+			taskVector[e].R = max({ taskVector[e].R, (k.R + k.P) });
+			cout << " \n Spelniono warunek 1 dla: " << e;
+		}
+		if ((k.R + taskVector[e].P + k.P + taskVector[b].Q) >= UB)
+		{
+			taskVector[e].Q = max({ taskVector[e].Q, k.Q + k.P });
+			cout << " \n Spelniono warunek 2 dla: " << e << endl << endl;
+		}
+	}
+}
+

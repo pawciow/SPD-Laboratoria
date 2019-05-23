@@ -74,8 +74,8 @@ void calculateInstanceFromLecture()
 int main()
 {
 	//calculateSchragePMTNInstantions();
-	//calculateInstanceFromLecture();
-	calculateTestInstantions();
+	calculateInstanceFromLecture();
+	//calculateTestInstantions();
 	return 0;
 }
 
