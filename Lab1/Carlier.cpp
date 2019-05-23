@@ -99,10 +99,9 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 		if (e.NR == toRembember_NR)
 			e.R = toRemember_R;
 	}
-	toRemember_R = -1;
 
 	// Krok 11	
-	toRembember_NR = taskVector[c].NR;
+	//toRembember_NR = taskVector[c].NR;
 	toRemember_Q = taskVector[c].Q;
 	taskVector[c].Q = max({ taskVector[c].Q, temporary.Q + temporary.P });
 	cout << "New Q: " << taskVector[c].Q << endl;
@@ -111,6 +110,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	SchragePmtn schragePmtn2;
 	schragePmtn2.LoadTasks(taskVector);
 	LB = schragePmtn2();
+	temp2 = findH(c - 1, b, taskVector);
 	sum3 = (temp2.R + temp2.P + temp2.Q);
 	cout << "LB: " << LB << " H{K}: " << (temporary.R + temporary.P + temporary.Q) << "H(K u {C}): " << sum3 << endl;
 	LB = max({ LB,
