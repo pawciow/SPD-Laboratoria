@@ -1,3 +1,4 @@
+
 #include "Carlier.h"
 
 
@@ -10,7 +11,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 {
 	unsigned int a = 0; // numer pierwszego zadania w bloku K
 	unsigned int b = 0; // numer ostatniego zadania w bloku K
-	unsigned int c = 0; // numer zadania przeszkadzajacêgo, interference job
+	unsigned int c = 0; // numer zadania przeszkadzajacÃªgo, interference job
 	unsigned int toRemember_R{};
 	unsigned int toRembember_NR{};
 	unsigned int toRemember_Q{};
@@ -35,7 +36,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	if (b == -1)
 	{
 		std::cerr << "   B to minus jeden! Zwracam:" << UB;
-		return UB; // Tego nie powinno byæ. To zapobiega wywalaniu, ale to jest Ÿle. Trzeba ogarn¹æ sk¹d to jest.
+		return UB; // Tego nie powinno byÃ¦. To zapobiega wywalaniu, ale to jest Å¸le. Trzeba ogarnÂ¹Ã¦ skÂ¹d to jest.
 
 	}
 
@@ -49,12 +50,12 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 
 	if (c == -1)
 	{
-		cout << "END "<< U << "\n";
+		cout << "END " << U << "\n";
 		return U;
 	}
 
 	cout << "A numer: " << taskVector[a].NR << " B numer: " << taskVector[b].NR << " C numer: " << taskVector[c].NR << endl;
-	cout << "A: " << a<< " B: " << b<< "C: " << c << endl;
+	cout << "A: " << a << " B: " << b << "C: " << c << endl;
 	// Krok 5:
 
 	RPQ temporary = findH(c, b, taskVector);
@@ -77,7 +78,24 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	LB = std::max({ LB,
 		temporary.width(),
 		temp2.width()
-	});
+		});
+
+	//Testy eliminacyjne
+	std::vector<RPQ> L;
+	for (auto & e : taskVector)
+	{
+		if (e.P > UB - (temporary.R + temporary.P + temporary.Q))
+			L.push_back(e);
+	}
+
+	for (auto & e : L)
+	{
+		if ((e.R + e.P + temporary.P + temporary.Q) >= UB)
+			e.R = max({ e.R, temporary.R + temporary.P });
+		if ((temporary.R + e.P + temporary.P + e.Q) >= UB)
+			e.Q = max({ e.Q, temporary.Q + temporary.P });
+	}
+	L.clear();
 
 	// Krok 8
 	if (LB < UB)
@@ -91,12 +109,15 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 		cout << "No left child " << UB << endl;
 	}
 	
+
+
 	// Krok 10
 	for (auto & e : taskVector)
 	{
 		if (e.NR == toRembember_NR)
 			e.R = toRemember_R;
 	}
+
 
 	// Krok 11	
 	toRembember_NR = taskVector[c].NR;
@@ -108,14 +129,30 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	SchragePmtn schragePmtn2;
 	schragePmtn2.LoadTasks(taskVector);
 	LB = schragePmtn2();
-	temp2 = findH(c-1, b, taskVector);
-	
+	temp2 = findH(c - 1, b, taskVector);
+
 	cout << "LB: " << LB << " H{K}: " << temporary.width() << "H(K u {C}): " << temp2.width() << endl;
 	LB = max({
 		LB,
 		temporary.width(),
-		temp2.width() 
-	});
+		temp2.width()
+		});
+
+	//Testy eliminacyjne
+	for (auto & e : taskVector)
+	{
+		if (e.P > UB - (temporary.R + temporary.P + temporary.Q))
+			L.push_back(e);
+	}
+
+	for (auto & e : L)
+	{
+		if ((e.R + e.P + temporary.P + temporary.Q) >= UB)
+			e.R = max({ e.R, temporary.R + temporary.P });
+		if ((temporary.R + e.P + temporary.P + e.Q) >= UB)
+			e.Q = max({ e.Q, temporary.Q + temporary.P });
+	}
+	L.clear();
 
 	// Krok 13
 	if (LB < UB)
@@ -140,6 +177,8 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 
 	return UB;
 
+
+
 }
 
 
@@ -148,10 +187,10 @@ int Carlier::find_b(std::vector<RPQ> _tasks, int Cmax)
 {
 
 	unsigned int i = 0;
-	for (i = _tasks.size()-1; i > 0 ; i--)
+	for (i = _tasks.size() - 1; i > 0; i--)
 		if (Cmax == _tasks[i].timeWhenItsFinished + _tasks[i].Q)
 			return i;
-	
+
 	return -1;
 }
 
@@ -210,15 +249,15 @@ RPQ Carlier::findH(int c, int b, std::vector<RPQ> taskVector)
 
 	cout << "\n    Counting for: ";
 	unsigned int TMP1 = 0, TMP2 = 0, sumP = 0;
-	for (unsigned int i = c+1; i <= b; i++)
+	for (unsigned int i = c + 1; i <= b; i++)
 	{
 		cout << i << " ";
 		sumP = sumP + taskVector[i].P;
 	}
-	TMP1 = max_element(taskVector.begin() + (c+1), taskVector.begin() + b+1, by_R)->R; // Hax because min_element() gives  the biggest because of comparator
-	TMP2 = min_element(taskVector.begin() + (c+1), taskVector.begin() + b+1, by_Q)->Q;
+	TMP1 = max_element(taskVector.begin() + (c + 1), taskVector.begin() + b + 1, by_R)->R; // Hax because min_element() gives  the biggest because of comparator
+	TMP2 = min_element(taskVector.begin() + (c + 1), taskVector.begin() + b + 1, by_Q)->Q;
 
 	cout << endl;
-	return {TMP1, sumP, TMP2, 987};
+	return { TMP1, sumP, TMP2, 987 };
 
 }
