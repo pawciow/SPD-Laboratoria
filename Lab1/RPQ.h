@@ -11,6 +11,11 @@ public:
 	unsigned int R, P, Q, NR, timeWhenItsFinished;
 	virtual ~RPQ();
 
+	unsigned int width()
+	{
+		return (this->R + this->P + this->Q);
+	}
+
 };
 
 class RpqComparatorByR

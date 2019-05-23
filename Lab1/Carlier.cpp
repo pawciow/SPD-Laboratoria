@@ -16,8 +16,6 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	//U = __UB__;
 	int i = 0;
 	cout << "\n	       Na poczatku: " << UB << endl;
-	//unsigned int R_PERMUTACJI_WYKONANIA_ZADAN_NA_MASZYNIE; //?? by³o u http://new.zsd.iiar.pwr.wroc.pl/files/zadania/CARLIER/AC.pdf
-
 	Schrage schrage;
 	schrage.LoadTasks(taskVector);
 	U = schrage();
@@ -73,12 +71,10 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	SchragePmtn schragePmtn;
 	schragePmtn.LoadTasks(taskVector);
 	LB = schragePmtn();
-	auto sum3 = temp2.R + temp2.P + temp2.Q ;
-
-	cout << "LB: " << LB << " H{K}: " << (temporary.R + temporary.P + temporary.Q) << "H(K u {C}): " << sum3 << endl;
-	LB = std::max({ LB, 
-		temporary.R+temporary.P+temporary.Q,
-		sum3//  moze byc taskVector[c].R
+	cout << "LB: " << LB << " H{K}: " << temporary.width() << "H(K u {C}): " << temp2.width() << endl;
+	LB = std::max({ LB,
+		temporary.width(),
+		temp2.width()
 	});
 
 	// Krok 8
@@ -101,29 +97,28 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	}
 
 	// Krok 11	
-	//toRembember_NR = taskVector[c].NR;
+	toRembember_NR = taskVector[c].NR;
 	toRemember_Q = taskVector[c].Q;
 	taskVector[c].Q = max({ taskVector[c].Q, temporary.Q + temporary.P });
 	cout << "New Q: " << taskVector[c].Q << endl;
-	//temp2 = findH(c, b, taskVector);
+
 	// Krok 12
 	SchragePmtn schragePmtn2;
 	schragePmtn2.LoadTasks(taskVector);
 	LB = schragePmtn2();
-	temp2 = findH(c - 1, b, taskVector);
-	sum3 = (temp2.R + temp2.P + temp2.Q);
-	cout << "LB: " << LB << " H{K}: " << (temporary.R + temporary.P + temporary.Q) << "H(K u {C}): " << sum3 << endl;
-	LB = max({ LB,
-	temporary.R + temporary.P + temporary.Q,
-		sum3
-	 // Pamietac ze moze byc taskVector[c].Q
-		});
+	temp2 = findH(c-1, b, taskVector);
+	
+	cout << "LB: " << LB << " H{K}: " << temporary.width() << "H(K u {C}): " << temp2.width() << endl;
+	LB = max({
+		LB,
+		temporary.width(),
+		temp2.width() 
+	});
 
 	// Krok 13
 	if (LB < UB)
 	{
 		cout << "Right child enters with: " << UB << std::endl;
-		//UB = LB;
 		UB = carlier(taskVector, UB);
 		cout << "And Right child returns with: " << UB << endl;
 	}
@@ -210,14 +205,18 @@ RPQ Carlier::findH(int c, int b, std::vector<RPQ> taskVector)
 	RpqComparatorByR by_R;
 	RpqComparatorByQ by_Q;
 
+
+	cout << "\n    Counting for: ";
 	unsigned int TMP1 = 0, TMP2 = 0, sumP = 0;
 	for (unsigned int i = c+1; i <= b; i++)
 	{
+		cout << i << " ";
 		sumP = sumP + taskVector[i].P;
 	}
 	TMP1 = max_element(taskVector.begin() + (c+1), taskVector.begin() + b+1, by_R)->R; // Hax because min_element() gives  the biggest because of comparator
 	TMP2 = min_element(taskVector.begin() + (c+1), taskVector.begin() + b+1, by_Q)->Q;
 
+	cout << endl;
 	return {TMP1, sumP, TMP2, 987};
 
 }

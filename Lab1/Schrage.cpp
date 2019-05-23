@@ -15,6 +15,7 @@ void Schrage::LoadTasks(std::string filename)
 		tasksVector.push_back({ r,p,q,i+1 });
 	}
 	fileStream.close();
+	resultFromMakuchowski = a;
 }
 
 void Schrage::LoadTasks(std::vector<RPQ> _tasksVector)

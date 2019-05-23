@@ -20,6 +20,8 @@ public:
 	Heap <RPQ, RpqComparatorByR>  notOrderedTask;
 	Heap <RPQ, RpqComparatorByQ>	orderedTask;
 	int Cmax;
+
+	int resultFromMakuchowski;
 public:
 	std::vector<RPQ> resultOrder;
 	std::vector<RPQ> tasksVector;

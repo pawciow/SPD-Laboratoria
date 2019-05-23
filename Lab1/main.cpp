@@ -4,7 +4,35 @@
 #include <cstdio>
 #include <ctime>
 #include <string>
+void calculateSchragePMTNInstantions()
+{
 
+	int score = 0;
+	for (int i = 1; i < 10; i++)
+	{
+		std::string file = "dane_testowe\\schragepmtn\\";
+		file += std::to_string(i);
+		file += ".txt";
+
+		std::cout << "TEST NUMER: " << file << endl;
+		SchragePmtn tmp;
+		tmp.LoadTasks(file);
+		int a = tmp();
+		std::cout << "\n najlepszy wynik: " << a;
+		if (tmp.resultFromMakuchowski == a)
+		{
+			score++;
+			std::cout << "\n DOBRZE! \n";
+		}
+		else
+		{
+			std::cout << "\n ZLE! Powinno byc: " << tmp.resultFromMakuchowski << endl;
+		}
+		std::cout << " \n \n \n \n";
+
+	}
+	std::cout << "by³o dobrze: " << score;
+}
 void calculateTestInstantions()
 {
 
@@ -45,7 +73,8 @@ void calculateInstanceFromLecture()
 }
 int main()
 {
-	calculateInstanceFromLecture();
+	calculateSchragePMTNInstantions();
+	//calculateInstanceFromLecture();
 	//calculateTestInstantions();
 	return 0;
 }
