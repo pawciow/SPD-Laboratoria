@@ -238,13 +238,13 @@ RPQ Carlier::findH(int c, int b, std::vector<RPQ> taskVector)
 
 }
 
-void Carlier::testyEliminacyjne(int a, int b, std::vector<RPQ> taskVector, RPQ k, int UB)
+void Carlier::testyEliminacyjne(int a, int b, std::vector<RPQ> & taskVector, RPQ k, int UB)
 {
-	cout << "\n\n	TESTY ELIMINACYJNE \n" ;
+	cout << "\n\n	TESTY ELIMINACYJNE \n Sprawdzam : " ;
 	vector<int>  L;
-	/*for (unsigned int i = 0; i < a; i++)
+	for (unsigned int i = 0; i < a; i++)
 	{
-		cout << "Sprawdzam : " << i << " ";
+		cout << i << " ";
 		if (taskVector[i].P > UB - k.width())
 			L.push_back(i);
 	}
@@ -253,7 +253,7 @@ void Carlier::testyEliminacyjne(int a, int b, std::vector<RPQ> taskVector, RPQ k
 		cout << i << " ";
 		if (taskVector[i].P > UB - k.width())
 			L.push_back(i);
-	}*/
+	}
 	/*
 	cout << "Sprawdzam : "; 
 	for (int i = 0; i < taskVector.size(); i++)
