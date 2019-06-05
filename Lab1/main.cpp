@@ -39,7 +39,7 @@ void calculateTestInstantions()
 	int score = 0;
 	for (int i = 1; i < 10; i++)
 	{
-		if(i == 3 || i == 2 || i == 5 || i == 8)
+		if(i == 3 || i == 7|| i == 2 || i == 5 || i == 8)
 			continue;
 		std::string file = "dane_testowe\\carlier\\";
 		file += std::to_string(i);
@@ -74,8 +74,8 @@ void calculateInstanceFromLecture()
 int main()
 {
 	//calculateSchragePMTNInstantions();
-	calculateInstanceFromLecture();
-	//calculateTestInstantions();
+	//calculateInstanceFromLecture();
+	calculateTestInstantions();
 	return 0;
 }
 

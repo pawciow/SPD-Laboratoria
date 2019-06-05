@@ -15,7 +15,7 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	unsigned int toRemember_R{};
 	unsigned int toRembember_NR{};
 	unsigned int toRemember_Q{};
-	unsigned int U, LB;
+	unsigned int U, LB = 0;
 	//U = __UB__;
 	int i = 0;
 	cout << "\n	       Na poczatku: " << UB << endl;
@@ -29,8 +29,9 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 		UB = U;
 		taskVector = schrage.resultOrder;
 	}
-
-
+	SchragePmtn schragePmtn;
+	schragePmtn.LoadTasks(taskVector);
+	unsigned int  Cmax_pmtn = schragePmtn();
 	////////// KROK 3
 	b = find_b(taskVector, U);
 	if (b == -1)
@@ -46,12 +47,12 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 		std::cerr << " A to minus jeden! Zwracam: " << UB << endl;
 		return UB;
 	}
-	c = find_c(taskVector, U, a, b);
 
+	c = find_c(taskVector, U, a, b);
 	if (c == -1)
 	{
-		cout << "END " << U << "\n";
-		return U;
+		cout << "END " << UB << "\n";
+		return UB;
 	}
 
 	cout << "A numer: " << taskVector[a].NR << " B numer: " << taskVector[b].NR << " C numer: " << taskVector[c].NR << endl;
@@ -71,17 +72,15 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	RPQ temp2 = findH(c - 1, b, taskVector);
 
 	// Krok 7
-	SchragePmtn schragePmtn;
-	schragePmtn.LoadTasks(taskVector);
-	LB = schragePmtn();
+
 	cout << "LB: " << LB << " H{K}: " << temporary.width() << "H(K u {C}): " << temp2.width() << endl;
-	LB = std::max({ LB,
+	LB = std::max({ Cmax_pmtn,
 		temporary.width(),
 		temp2.width()
 		});
 
 	//Testy eliminacyjne
-	testyEliminacyjne(a, b, taskVector, temporary, UB);
+	testyEliminacyjne_PoR(c+1, b, taskVector, temporary, UB);
 	/******************************* ZOBACZYĆ CZY TO TUTAJ       *************************************/
 	// Krok 8
 	if (LB < UB)
@@ -112,18 +111,17 @@ int Carlier::carlier(vector<RPQ> taskVector, int UB)
 	cout << "New Q: " << taskVector[c].Q << endl;
 
 	// Krok 12
-	SchragePmtn schragePmtn2;
-	schragePmtn2.LoadTasks(taskVector);
-	LB = schragePmtn2();
-	temp2 = findH(c - 1, b, taskVector);
+
+	//temp2 = findH(c - 1, b, taskVector);
 
 	cout << "LB: " << LB << " H{K}: " << temporary.width() << "H(K u {C}): " << temp2.width() << endl;
 
+	
 	//Testy eliminacyjne
-	testyEliminacyjne(a, b, taskVector, temporary, UB);
+	testyEliminacyjne_PoQ(c+1, b, taskVector, temporary, UB);
 	/******************************* ZOBACZYĆ CZY TO TUTAJ       *************************************/
 	LB = max({
-		LB,
+		Cmax_pmtn,
 		temporary.width(),
 		temp2.width()
 		});
@@ -238,46 +236,67 @@ RPQ Carlier::findH(int c, int b, std::vector<RPQ> taskVector)
 
 }
 
-void Carlier::testyEliminacyjne(int a, int b, std::vector<RPQ> & taskVector, RPQ k, int UB)
+void Carlier::testyEliminacyjne_PoR(int a, int b, std::vector<RPQ> & taskVector, RPQ k, int UB)
 {
-	cout << "\n\n	TESTY ELIMINACYJNE \n Sprawdzam : " ;
+	//cout << "\n\n	TESTY ELIMINACYJNE \n Sprawdzam : " ;
 	vector<int>  L;
 	for (unsigned int i = 0; i < a; i++)
 	{
-		cout << i << " ";
+		//cout << i << " ";
 		if (taskVector[i].P > UB - k.width())
 			L.push_back(i);
 	}
-	for (unsigned int i = b; i < taskVector.size(); i++)
+	for (unsigned int i = b+1; i < taskVector.size(); i++)
 	{
-		cout << i << " ";
+		//cout << i << " ";
 		if (taskVector[i].P > UB - k.width())
 			L.push_back(i);
 	}
-	/*
-	cout << "Sprawdzam : "; 
+	for (auto & e : L)
+	{
+		if ((taskVector[e].R + taskVector[e].P + k.P + taskVector[b].Q) >= UB)
+		{
+			taskVector[e].R = max({ taskVector[e].R, (k.R + k.P) });
+			//cout << " \n Spelniono warunek 1 dla: " << e;
+		}
+	}
+}
+
+
+void Carlier::testyEliminacyjne_PoQ(int a, int b, std::vector<RPQ> & taskVector, RPQ k, int UB)
+{
+	//cout << "\n\n	TESTY ELIMINACYJNE \n Sprawdzam : ";
+	vector<int>  L;
+	for (unsigned int i = 0; i < a; i++)
+	{
+		//cout << i << " ";
+		if (taskVector[i].P > UB - k.width())
+			L.push_back(i);
+	}
+	for (unsigned int i = b + 1; i < taskVector.size(); i++)
+	{
+		//cout << i << " ";
+		if (taskVector[i].P > UB - k.width())
+			L.push_back(i);
+	}
+
+	/*cout << "Sprawdzam : ";
 	for (int i = 0; i < taskVector.size(); i++)
 	{
 		cout << i << " ";
 		if (taskVector[i].P > UB - k.width())
 			L.push_back(i);
 	}
-
-	for(auto & e : L)
-		cout << "\n Znaleziono: " << e << " ";
 	*/
+	//for (auto & e : L)
+		//cout << "\n Znaleziono: " << e << " ";
+
 	for (auto & e : L)
 	{
-		if ((taskVector[e].R + taskVector[e].P + k.P + taskVector[b].Q) >= UB)
-		{
-			taskVector[e].R = max({ taskVector[e].R, (k.R + k.P) });
-			cout << " \n Spelniono warunek 1 dla: " << e;
-		}
-		if ((k.R + taskVector[e].P + k.P + taskVector[b].Q) >= UB)
+		if ((k.R + taskVector[e].P + k.P + taskVector[e].Q) >= UB)
 		{
 			taskVector[e].Q = max({ taskVector[e].Q, k.Q + k.P });
-			cout << " \n Spelniono warunek 2 dla: " << e << endl << endl;
+			//cout << " \n Spelniono warunek 2 dla: " << e << endl << endl;
 		}
 	}
 }
-
